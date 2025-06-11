@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 
 # Esta función toma como argumentos el tamaño lineal de la grilla cuadrada,
@@ -41,4 +43,8 @@ def jacobi_relaxation(M, V_p, V_n, tolerance):
         # El nuevo phiprime es el phi viejo
         phiprime = temp
 
-    return phi, its
+    return phi, its, delta
+
+
+jacobi_vals, iterations, error = jacobi_relaxation(10, 1.0, -1.0, 1e-5)
+print(f"Convergencia alcanzada en {iterations} iteraciones con error {error}")
