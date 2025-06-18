@@ -15,10 +15,6 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
     Una posee un potencial `V_p` y otra con `V_n`. Se actualiza iterativamente el potencial
     en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.
 
-    Ejemplo:
-        >>> phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)
-        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
-
     Args:
         L (int): Tamaño físico de la placa cuadrada (dado en cm).
         M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
@@ -27,10 +23,13 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
         tolerance (float): Tolerancia para el criterio de convergencia.
 
     Returns:
-
         phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.
         its (int): Número de iteraciones realizadas.
         delta (float): Error máximo alcanzado en la última iteración.
+
+    Examples:
+        >>> phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)
+        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
     """
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
