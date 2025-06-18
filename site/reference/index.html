@@ -279,6 +279,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#metodo-de-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#src.jaccobi" class="md-nav__link">
     <span class="md-ellipsis">
       jaccobi
@@ -291,6 +300,51 @@
   <a href="#src.jaccobi.jacobi_relaxation" class="md-nav__link">
     <span class="md-ellipsis">
       jacobi_relaxation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodo-de-sobre-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de Sobre-relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.jaccobi_modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      jaccobi_modified
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.jaccobi_modified.jacobi_modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      jacobi_modified
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodo-de-gauss-seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de Gauss-seidel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.gauss_seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      gauss_seidel
     </span>
   </a>
   
@@ -351,6 +405,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#metodo-de-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#src.jaccobi" class="md-nav__link">
     <span class="md-ellipsis">
       jaccobi
@@ -363,6 +426,51 @@
   <a href="#src.jaccobi.jacobi_relaxation" class="md-nav__link">
     <span class="md-ellipsis">
       jacobi_relaxation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodo-de-sobre-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de Sobre-relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.jaccobi_modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      jaccobi_modified
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.jaccobi_modified.jacobi_modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      jacobi_modified
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodo-de-gauss-seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Método de Gauss-seidel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.gauss_seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      gauss_seidel
     </span>
   </a>
   
@@ -384,6 +492,7 @@
 
 
 <h1 id="referencias">Referencias</h1>
+<h2 id="metodo-de-relajacion-de-jacobi">Método de relajación de Jacobi</h2>
 
 
 <div class="doc doc-object doc-module">
@@ -722,7 +831,320 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
     </div>
 
+</div><h2 id="metodo-de-sobre-relajacion-de-jacobi">Método de Sobre-relajación de Jacobi</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.jaccobi_modified"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="src.jaccobi_modified.jacobi_modified" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Aplicamos el método de Jacobi modificado con sobre-relajación para resolver
+el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.</p>
+<p>Se modela la región cuadrada de tamaño <code>L x L</code>dividida en <code>M x M</code> puntos.
+Se tienen dos barras verticales que se colocan como condiciones de frontera internas:
+Una posee un potencial <code>V_p</code> y otra con <code>V_n</code>. Se actualiza iterativamente el potencial
+en el resto de la grilla usando un factor de sobre-relajación <code>omega</code> para acelerar la convergencia.</p>
+
+
+<details class="ejemplo" open>
+  <summary>Ejemplo</summary>
+  <blockquote>
+<blockquote>
+<blockquote>
+<p>phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)
+print(f"Iteraciones: {its}, Error final: {error:.2e}")</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>L</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tamaño físico de la placa cuadrada (dado en cm).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>M</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>V_p</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Voltaje aplicado en la barra positiva.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>V_n</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Voltaje aplicado en la barra negativa.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>tolerance</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tolerancia para el criterio de convergencia.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns:</p>
+<div class="highlight"><pre><span></span><code>phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.
+its (int): Número de iteraciones realizadas.
+delta (float): Error máximo alcanzado en la última iteración.
+</code></pre></div>
+
+            <details class="quote">
+              <summary>Source code in <code>src/jaccobi_modified.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aplicamos el método de Jacobi modificado con sobre-relajación para resolver</span>
+<span class="sd">    el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.</span>
+
+<span class="sd">    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.</span>
+<span class="sd">    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:</span>
+<span class="sd">    Una posee un potencial `V_p` y otra con `V_n`. Se actualiza iterativamente el potencial</span>
+<span class="sd">    en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.</span>
+
+<span class="sd">    Ejemplo:</span>
+<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Iteraciones: {its}, Error final: {error:.2e}&quot;)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
+<span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
+<span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
+<span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
+<span class="sd">        tolerance (float): Tolerancia para el criterio de convergencia.</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.</span>
+<span class="sd">        its (int): Número de iteraciones realizadas.</span>
+<span class="sd">        delta (float): Error máximo alcanzado en la última iteración.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Primero creamos los arreglos 2-dimensionales de la grilla</span>
+    <span class="c1"># Vamos a necesitar dos según la regla de Jacobi</span>
+    <span class="c1"># Note que usamos M+1, debido a que debemos contener la condición de frontera</span>
+    <span class="c1"># phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
+
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
+
+    <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
+    <span class="c1"># Recuerde accesos de listas en np.ndarray</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_plus</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_p</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_n</span>
+    <span class="c1"># phiprime se necesita para la iteración</span>
+    <span class="n">phiprime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># Iteración de Jacobi</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">its</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+        <span class="c1"># Calculamos la iteración</span>
+        <span class="n">its</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_plus</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_neg</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span><span class="p">:</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="c1"># Condición de frontera</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">M</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">M</span><span class="p">:</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="c1"># Iteración principal</span>
+                <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># COMPLETE AQUÍ</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">omega</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+        <span class="c1"># Calculamos la diferencia máxima con respecto a los valores anteriores</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="n">phiprime</span><span class="p">))</span>
+        <span class="c1"># Ahora intercambiamos los arreglos para la nueva iteración</span>
+        <span class="c1"># El nuevo phi es el phiprime</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">phi</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">phiprime</span>
+        <span class="c1"># El nuevo phiprime es el phi viejo</span>
+        <span class="n">phiprime</span> <span class="o">=</span> <span class="n">temp</span>
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="metodo-de-gauss-seidel">Método de Gauss-seidel</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.gauss_seidel"></a>
+    <div class="doc doc-contents first">
+
+    </div>
+
+</div><h1 id="metodo-de-gauss-seidel-implementado-en-c">Método de Gauss-seidel implementado en c++</h1>
 
 
 
