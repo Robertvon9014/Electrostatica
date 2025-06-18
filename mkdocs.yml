@@ -2,6 +2,10 @@ site_name: Capacitor y su solución númerica
 
 theme: 
   name: "material"
+  features:
+    - navigation.top
+  toc:
+    depth: 2
 
 nav:
   - index.md
