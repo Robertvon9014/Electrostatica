@@ -1,8 +1,7 @@
 site_name: Capacitor y su solución númerica
 
 theme: 
-  name:
-    "material"
+  name: "material"
 
 nav:
   - index.md
