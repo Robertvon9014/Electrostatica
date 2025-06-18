@@ -14,10 +14,6 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
     Una posee un potencial `V_p` y otra con `V_n`. La función itera hasta que el cambio
     máximo entre iteraciones sea menor que la `tolerance`.
 
-    Ejemplo:
-        >>> phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
-        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
-
     Args:
         L (int): Tamaño físico de la placa cuadrada (dado en cm).
         M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
@@ -29,6 +25,11 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
         phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.
         its (int): Número de iteraciones realizadas.
         delta (float): Error máximo alcanzado en la última iteración.
+
+    Examples:
+        >>> phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
+        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
+        Iteraciones: 1794, Error final: 9.99e-06
     """
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
