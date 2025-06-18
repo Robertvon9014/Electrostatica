@@ -6,6 +6,32 @@ import numpy as np
 # V_p: Voltaje positivo
 # V_n: Voltaje negativo
 def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
+    """
+    Aplicamos el método de Jacobi modificado con sobre-relajación para resolver
+    el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.
+
+    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.
+    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:
+    Una posee un potencial `V_p` y otra con `V_n`. Se actualiza iterativamente el potencial
+    en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.
+
+    Ejemplo:
+        >>> phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)
+        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
+
+    Args:
+        L (int): Tamaño físico de la placa cuadrada (dado en cm).
+        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
+        V_p (float): Voltaje aplicado en la barra positiva.
+        V_n (float): Voltaje aplicado en la barra negativa.
+        tolerance (float): Tolerancia para el criterio de convergencia.
+
+    Returns:
+        tuple: (phi, its, delta)
+            phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.
+            its (int): Número de iteraciones realizadas.
+            delta (float): Error máximo alcanzado en la última iteración.
+    """
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
     # Note que usamos M+1, debido a que debemos contener la condición de frontera

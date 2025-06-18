@@ -6,6 +6,31 @@ import numpy as np
 # V_p: Voltaje positivo
 # V_n: Voltaje negativo
 def jacobi_relaxation(L, M, V_p, V_n, tolerance):
+    """
+    Resuelve el potencial eléctrico en una placa cuadrada usando el método de relajación de Jacobi.
+
+    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.
+    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:
+    Una posee un potencial `V_p` y otra con `V_n`. La función itera hasta que el cambio
+    máximo entre iteraciones sea menor que la `tolerance`.
+
+    Ejemplo:
+        >>> phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
+        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
+
+    Args:
+        L (int): Tamaño físico de la placa cuadrada (dado en cm).
+        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
+        V_p (float): Voltaje aplicado en la barra positiva.
+        V_n (float): Voltaje aplicado en la barra negativa.
+        tolerance (float): Tolerancia para el criterio de convergencia.
+
+    Returns:
+        tuple: (phi, its, delta)
+            phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.
+            its (int): Número de iteraciones realizadas.
+            delta (float): Error máximo alcanzado en la última iteración.
+    """
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
     # Note que usamos M+1, debido a que debemos contener la condición de frontera
@@ -57,6 +82,5 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
 
     return phi, its, delta
 
-
 jacobi_vals, iterations, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
-print(f"Convergencia alcanzada en {iterations} iteraciones con error {error}")
+print(f"Convergencia alcanzada en {iterations} iteraciones con error {error:.2e}")
