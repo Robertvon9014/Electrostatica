@@ -30,6 +30,7 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
     Examples:
         >>> phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)
         >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
+        error en la iteración.
     """
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
