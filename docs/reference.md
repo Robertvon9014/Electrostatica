@@ -4,7 +4,7 @@
 ::: src.jaccobi
 
 ## Método de Sobre-relajación de Jacobi
-::: src.jaccobi_modfied
+::: src.jaccobi_modified
 
 ## Método de Gauss-seidel
 ::: src.gauss_seidel
