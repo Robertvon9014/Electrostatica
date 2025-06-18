@@ -5,7 +5,7 @@ import numpy as np
 # Esta función toma como argumentos el tamaño lineal de la grilla cuadrada,
 # V_p: Voltaje positivo
 # V_n: Voltaje negativo
-def jacobi_relaxation(M, V_p, V_n, tolerance):
+def jacobi_relaxation(L, M, V_p, V_n, tolerance):
     # Primero creamos los arreglos 2-dimensionales de la grilla
     # Vamos a necesitar dos según la regla de Jacobi
     # Note que usamos M+1, debido a que debemos contener la condición de frontera
@@ -13,8 +13,20 @@ def jacobi_relaxation(M, V_p, V_n, tolerance):
     phi = np.zeros((M + 1, M + 1), dtype=float)
     # Ahora tenemos que colocar la condición inicial.
     # Recuerde accesos de listas en np.ndarray
-    phi[2:9, 2] = V_p
-    phi[2:9, 8] = V_n
+
+    # --- Calculamos la reposición dependiendo el tamaño de M
+    fil_start = int((2 * M) / L) # 2 cm desde arriba
+    bar_len = int((6 * M) / L)   # 6 cm longitud de la barra
+    fil_end = fil_start + bar_len
+
+    col_plus = int((2 * M) / L)  # Voltaje positivo a 2 cm del borde izquierdo
+    col_neg = col_plus + bar_len # Voltaje Negativo a 2 cm del borde derecho
+
+    # Ahora tenemos que colocar la condición inicial.
+    # Recuerde accesos de listas en np.ndarray
+    phi[fil_start:fil_end, col_plus] = V_p  # Barra positiva
+    phi[fil_start:fil_end, col_neg] = V_n    # Barra negativa
+
     # phiprime se necesita para la iteración
     phiprime = np.zeros((M + 1, M + 1), dtype=float)
     # Iteración de Jacobi
@@ -26,7 +38,7 @@ def jacobi_relaxation(M, V_p, V_n, tolerance):
         for i in range(M + 1):
             for j in range(M + 1):
                 # Condición de frontera
-                if j == 2 and 2 <= i <= 8 or j == 8 and 2 <= i <= 8:
+                if j == col_plus and fil_start <= i <= fil_end or j == col_neg and fil_start <= i <= fil_end:
                     phiprime[i, j] = phi[i,j]
                 elif i == 0 or i == M or j == 0 or j == M:
                     phiprime[i, j] = phi[i, j]
@@ -46,5 +58,5 @@ def jacobi_relaxation(M, V_p, V_n, tolerance):
     return phi, its, delta
 
 
-jacobi_vals, iterations, error = jacobi_relaxation(10, 1.0, -1.0, 1e-5)
+jacobi_vals, iterations, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
 print(f"Convergencia alcanzada en {iterations} iteraciones con error {error}")
