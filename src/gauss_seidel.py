@@ -25,8 +25,8 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
 
     Examples:
         >>> phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
-        >>> print(f"Iteraciones: {its}, Error final: {error:.2e}")
-        Iteraciones: 1794, Error final: 9.99e-06
+        >>> print(f"Convergencia alcanzada en {itertions} iteraciones con error de {error:.2e}")
+        Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06
     """
     # Primero creamos el arreglo 2-dimensionales de la grilla
     # Note que usamos M+1, debido a que debemos contener la condición de frontera
@@ -71,4 +71,4 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
     return phi, its, delta
 
 gaussSeidel_vals, iterations, error = gauss_seidel(10, 100, 1.0, -1.0, 1e-5)
-print(f"Convergencia alcanzada en {iterations} iteraciones con error de {error}")
+print(f"Convergencia alcanzada en {iterations} iteraciones con error de {error:.2e}")
