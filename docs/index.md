@@ -1,17 +1,22 @@
-# Welcome to MkDocs
+# Métodos Numéricos para la Ecuación de Laplace
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+En este proyeto se implementa y compara distintos métodos numéricos para resolver la ecuación diferencial de Laplace en dos dimensiones, modelando un capacitor idela en una placa cuadrada 10cm x 10 cm
 
-## Commands
+Incluimos las siguientes implementaciones:
+- Método de relajación de Jacobi (Python)
+- Método de sobre-relajación de Jacobi (Python)
+- Método de Gauss-Seidel (Python)
+- Método de Gauss-Seide (C++)
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+El objetivo es compara la eficiencia y convergencia de los métodos para la resolución del potencial electroestátito de una malla discreta, con condiciones de frontera internas simulando las placas del capacitos.
 
-## Project layout
+---
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Para más información consultar los apartados de explicación y tutoriales.
+
+---
+
+## Contenidos 
+
+- [Explicación](explanation.md)
+- [Tutoriales](tutorials.md)
