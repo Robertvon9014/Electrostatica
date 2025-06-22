@@ -103,5 +103,5 @@ plt.savefig('Jacobi.png', dpi=300)  # Guarda la imagen con buena resolución
 plt.show()
 ```
 
-## Gráfica:
-![Distribución de Potencial](jacobi.png)
+### Gráfica:
+![Distribución de Potencial](Jacobi.png)
