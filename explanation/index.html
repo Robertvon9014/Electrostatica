@@ -18,7 +18,7 @@
     
     
       
-        <title>Explanation - Capacitor y su solución númerica</title>
+        <title>Explicación de los Métodos Numéricos - Capacitor y su solución númerica</title>
       
     
     
@@ -61,6 +61,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#explicacion-de-los-metodos-numericos" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -93,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Explanation
+              Explicación de los Métodos Numéricos
             
           </span>
         </div>
@@ -210,7 +215,7 @@
         
   
   <span class="md-ellipsis">
-    Tutorials
+    Tutorial
   </span>
   
 
@@ -252,16 +257,135 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Explicación de los Métodos Numéricos
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Explanation
+    Explicación de los Métodos Numéricos
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problema-fisico" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problema físico
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-implementados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métodos implementados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métodos implementados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-metodo-de-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Método de relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Método de sobre-relajación de Jacobi (Jacobi modificado)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-metodo-de-gauss-seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Método de Gauss-Seidel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-metodo-de-gauss-seidel-en-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Método de Gauss-Seidel en C++
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      Condiciones de frontera y configuración de la grilla
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convergencia-y-criterio-de-parada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convergencia y criterio de parada
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparacion-y-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparación y resultados
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -284,6 +408,103 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problema-fisico" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problema físico
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-implementados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métodos implementados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métodos implementados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-metodo-de-relajacion-de-jacobi" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Método de relajación de Jacobi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Método de sobre-relajación de Jacobi (Jacobi modificado)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-metodo-de-gauss-seidel" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Método de Gauss-Seidel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-metodo-de-gauss-seidel-en-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Método de Gauss-Seidel en C++
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      Condiciones de frontera y configuración de la grilla
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convergencia-y-criterio-de-parada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convergencia y criterio de parada
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparacion-y-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparación y resultados
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -298,9 +519,62 @@
                   
 
 
-  <h1>Explanation</h1>
-
-
+<h1 id="explicacion-de-los-metodos-numericos">Explicación de los Métodos Numéricos</h1>
+<h2 id="problema-fisico">Problema físico</h2>
+<p>Se resuelve la ecuación de Laplace bidimensional para el potencial eléctrico <span class="arithmatex">\(\phi(x,y)\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial^2 \phi}{\partial x^2} + \frac{\partial^2 \phi}{\partial y^2} = 0
+\]</div>
+<p>en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor con potenciales <span class="arithmatex">\(V_p\)</span> y <span class="arithmatex">\(V_n\)</span>.</p>
+<hr />
+<h2 id="metodos-implementados">Métodos implementados</h2>
+<h3 id="1-metodo-de-relajacion-de-jacobi">1. Método de relajación de Jacobi</h3>
+<p>Este método itera actualizando el potencial en cada punto de la malla usando el promedio de sus vecinos en la iteración anterior, manteniendo fijas las condiciones de frontera.</p>
+<ul>
+<li>Es sencillo pero convergencia lenta.</li>
+<li>Requiere dos matrices para mantener valores antiguos y nuevos.</li>
+</ul>
+<hr />
+<h3 id="2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado">2. Método de sobre-relajación de Jacobi (Jacobi modificado)</h3>
+<p>Se aplica un factor de sobre-relajación <span class="arithmatex">\(\omega\)</span> para acelerar la convergencia, mezclando el valor nuevo calculado con el anterior:</p>
+<div class="arithmatex">\[
+\phi^{new} = (1+\omega) \times \text{valor calculado} - \omega \times \phi^{old}
+\]</div>
+<ul>
+<li>Acelera la convergencia respecto al Jacobi estándar.</li>
+<li>Requiere ajuste del parámetro <span class="arithmatex">\(\omega\)</span> para optimizar rendimiento.</li>
+</ul>
+<hr />
+<h3 id="3-metodo-de-gauss-seidel">3. Método de Gauss-Seidel</h3>
+<p>En este método, la actualización del potencial en cada punto usa los valores más recientes disponibles (actualizados durante la misma iteración), mejorando la velocidad de convergencia frente a Jacobi.</p>
+<ul>
+<li>Solo se necesita una matriz.</li>
+<li>Mejor convergencia en menos iteraciones.</li>
+</ul>
+<hr />
+<h3 id="4-metodo-de-gauss-seidel-en-c">4. Método de Gauss-Seidel en C++</h3>
+<p>Implementación equivalente al método de Gauss-Seidel en Python, pero usando C++ con <code>std::vector</code> y <code>std::tuple</code>.</p>
+<ul>
+<li>Permite una posible extensión para paralelización.</li>
+<li>Mejora en eficiencia y manejo de memoria para casos grandes.</li>
+</ul>
+<hr />
+<h2 id="condiciones-de-frontera-y-configuracion-de-la-grilla">Condiciones de frontera y configuración de la grilla</h2>
+<ul>
+<li>La placa se discretiza en una malla de <span class="arithmatex">\((M+1) \times (M+1)\)</span> puntos.</li>
+<li>Dos barras verticales se colocan a 2 cm de cada borde lateral, con longitudes de 6 cm, y potenciales fijos <span class="arithmatex">\(V_p\)</span> y <span class="arithmatex">\(V_n\)</span>.</li>
+<li>El resto de bordes y posiciones iniciales son 0.</li>
+</ul>
+<hr />
+<h2 id="convergencia-y-criterio-de-parada">Convergencia y criterio de parada</h2>
+<p>La iteración se detiene cuando la diferencia máxima absoluta entre iteraciones consecutivas es menor que una tolerancia dada.</p>
+<hr />
+<h2 id="comparacion-y-resultados">Comparación y resultados</h2>
+<ul>
+<li>El método de Gauss-Seidel converge más rápido que Jacobi.</li>
+<li>La sobre-relajación mejora aún más la velocidad si se escoge un <span class="arithmatex">\(\omega\)</span> adecuado (por ejemplo, 0.9).</li>
+<li>La implementación en C++ es más eficiente y es base para paralelización futura.</li>
+</ul>
 
 
 
