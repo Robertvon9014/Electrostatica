@@ -51,17 +51,48 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
     #pragma omp parallel 
     {
       #pragma omp single
-      num_procs = omp_get_num_threads();
-      #pragma omp for
+      {
+        num_procs = omp_get_num_threads();
+      }
+      /* --- Implementar el método de red-black ordering
+       * Este método consiste en colorear todo el dominio 
+       * de la grilla como si fuera un tablero de ajedrez:
+       * en celdas rojas y negras
+       * R N R N 
+       * N R N R 
+       * R N R N 
+       * N R N R
+       * La clave de este método es que cada paso iremos 
+       * actualizando las celdas rojas primero (usando las
+       * negras) y luego las celdas negras (usando las rojas
+       * recién actualizadas). */
+
+      // Actualizamos las celdas rojas
+      #pragma omp for collapse(2)
       for (int i = 1; i < M; ++i){
         for (int j = 1; j < M; ++j){
-          // Condición de frontera
-          // Valores de frontera no se modifican
-          if ((fil_start <= i && i <= fil_end) && (j == col_plus || j == col_neg)){
-            continue;
+          if ((i + j) % 2 == 0){
+            if ((fil_start <= i && i <= fil_end) && (j == col_plus || j == col_neg)){
+              continue;
+            }
+            else{
+              phi[i][j] = 0.25 * (phi[i + 1][j] + phi[i - 1][j] + phi[i][j + 1] + phi[i][j - 1]);
+            }
           }
-          else{
-            phi[i][j] = 0.25 * (phi[i + 1][j] + phi[i - 1][j] + phi[i][j + 1] + phi[i][j - 1]);
+        }
+      }
+
+      // Actualizamos las celdas negras
+      #pragma omp for collapse(2)
+      for (int i = 1; i < M; ++i){
+        for (int j = 1; j < M; ++j){
+          if ((i + j) % 2 == 1){
+            if ((fil_start <= i && i <= fil_end) && (j == col_plus || j == col_neg)){
+              continue;
+            }
+            else{
+              phi[i][j] = 0.25 * (phi[i + 1][j] + phi[i - 1][j] + phi[i][j + 1] + phi[i][j -1]);
+            }
           }
         }
       }
@@ -87,6 +118,7 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
     phi_copy = phi;
   }
 
+  //std::cout << "phi[50][25] = " << phi[50][25] << std::endl;
   return std::make_tuple(its, delta);
 }
 
