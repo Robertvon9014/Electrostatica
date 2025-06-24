@@ -21,7 +21,7 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
 
   // ---- Validar que M sea mayor a 10
   if (M <= 10){
-    throw std::runtime_error("El tamaño de la grilla (M) debe ser mayor a 10")
+    throw std::runtime_error("El tamaño de la grilla (M) debe ser mayor a 10");
   }
 
   // ---- Calcular la reposición dependiendo del valor de M
