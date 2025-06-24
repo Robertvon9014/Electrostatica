@@ -39,12 +39,16 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
     # Ahora tenemos que colocar la condición inicial.
     # Recuerde accesos de listas en np.ndarray
 
+    # Validamos que M sea mayor a 10
+    if M <= 10:
+        raise ValueError("El tamaño de la grilla (M) debe ser mayor a 10")
+
     # --- Calculamos la reposición dependiendo el tamaño de M
-    fil_start = int((2 * M) / L) # 2 cm desde arriba
-    bar_len = int((6 * M) / L)   # 6 cm longitud de la barra
+    fil_start = int(M * 0.2) # 2 cm desde arriba
+    bar_len = int(M * 0.6)   # 6 cm longitud de la barra
     fil_end = fil_start + bar_len
 
-    col_plus = int((2 * M) / L)  # Voltaje positivo a 2 cm del borde izquierdo
+    col_plus = int(M * 0.2)  # Voltaje positivo a 2 cm del borde izquierdo
     col_neg = col_plus + bar_len # Voltaje Negativo a 2 cm del borde derecho
 
     # Ahora tenemos que colocar la condición inicial.

@@ -38,6 +38,10 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
     # phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.
     phi = np.zeros((M + 1, M + 1), dtype=float)
 
+    # Validamos que el tamaño M sea mayor a 10
+    if M <= 10:
+        raise ValueError("El tamaño de la grilla (M) deber ser mayor a 10")
+
     # --- Calculamos la reposición dependiendo del valor de M
     fil_start = int((2 * M) / L) # 2 cm desde arriba
     vol_len = int((6 * M) / L)   # 6 cm longitud de la barra

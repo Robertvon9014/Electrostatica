@@ -33,12 +33,16 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
     # phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.
     phi = np.zeros((M + 1, M + 1), dtype=float)
 
+    # Validamos que M sea mayor que 10
+    if M <= 10:
+        raise ValueError("El tamaño de la grila (M) debe ser mayor a 10")
+
     # --- Calculamos la reposición dependiendo del valor de M
-    fil_start = int((2 * M) / L) # 2 cm desde arriba
-    vol_len = int((6 * M) / L)   # 6 cm longitud de la barra
+    fil_start = int(M * 0.2) # 2 cm desde arriba
+    vol_len = int(M * 0.6)   # 6 cm longitud de la barra
     fil_end = fil_start + vol_len
 
-    col_plus = int((2 * M) / L)  # voltaje positivo a 2 cm del borde izquierdo
+    col_plus = int(M * 0.2)  # voltaje positivo a 2 cm del borde izquierdo
     col_neg = col_plus + vol_len # Voltaje negativo a 2 cm del borde derecho
 
     # Ahora tenemos que colocar la condición inicial.
@@ -72,3 +76,4 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
 
 gaussSeidel_vals, iterations, error = gauss_seidel(10, 100, 1.0, -1.0, 1e-5)
 print(f"Convergencia alcanzada en {iterations} iteraciones con error de {error:.2e}")
+print("Valores grilla phi[50][25] ", gaussSeidel_vals[50][25])

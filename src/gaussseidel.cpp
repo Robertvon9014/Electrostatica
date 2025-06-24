@@ -8,13 +8,19 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
   using Matrix = std::vector<std::vector<double>>;
   Matrix phi(M + 1, std::vector<double>(M + 1, 0.0));
 
+  // ---- Validamos que M sea mayor a 10
+  if (M <= 10){
+    throw std::runtime_error("El tamaño de la grilla (M) debe ser mayor a 10");
+  }
+
   // ---- Calcular la reposición dependiendo del valor de M
   // ---- Posiciones expresadas en índices de grilla
-  int fil_start = (2 * M) / L; // 2 cm desde arriba
-  int bar_len = (6 * M) / L;   // longitud de la barra 6 cm
+  // Usamos static_cast<int> para convertir de double a int de forma segura.
+  int fil_start = static_cast<int>(M * 0.2); // 2 cm desde arriba
+  int bar_len = static_cast<int>(M * 0.6);   // longitud de la barra 6 cm
   int fil_end = fil_start + bar_len;
 
-  int col_plus = (2 * M) / L;  // Voltaje positivo a 2 cm del borde izquierdo
+  int col_plus = static_cast<int>(M * 0.2);  // Voltaje positivo a 2 cm del borde izquierdo
   int col_neg = col_plus + bar_len; // voltaje negativo a 2 cm del borde derecho 
   
   // Colocamos las condiciones iniciales 
