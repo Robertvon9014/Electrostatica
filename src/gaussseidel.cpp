@@ -65,8 +65,7 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
     // copiamos los valores de la nueva iteracion
     phi_copy = phi;
   }
-
-//std::cout << "phi[50][25] = " << phi[50][25] << std::endl;
+  //std::cout << "phi[50][25] = " << phi[50][25] << std::endl;
   return std::make_tuple(its, delta);
 }
 
