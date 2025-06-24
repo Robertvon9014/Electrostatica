@@ -76,4 +76,4 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
 
 gaussSeidel_vals, iterations, error = gauss_seidel(10, 100, 1.0, -1.0, 1e-5)
 print(f"Convergencia alcanzada en {iterations} iteraciones con error de {error:.2e}")
-print("Valores grilla phi[50][25] ", gaussSeidel_vals[50][25])
+# print("Valores grilla phi[50][25] ", gaussSeidel_vals[50][25])
