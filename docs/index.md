@@ -1,6 +1,7 @@
 # Métodos Numéricos para la Ecuación de Laplace
 
-En este proyeto se implementa y compara distintos métodos numéricos para resolver la ecuación diferencial de Laplace en dos dimensiones, modelando un capacitor idela en una placa cuadrada 10cm x 10 cm
+En este proyeto se implementa y compara distintos métodos numéricos para resolver la ecuación diferencial de Laplace en dos dimensiones, modelando 
+un capacitor ideal en una placa cuadrada 10 cm x 10 cm
 
 Incluimos las siguientes implementaciones:
 - Método de relajación de Jacobi (Python)
