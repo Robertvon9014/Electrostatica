@@ -9,8 +9,8 @@ pip instal numpy
 pip install matplotlib
 ```
 ## Paso 1: Configuramos el entorno
-Primero abrimos el editor de código `vim` y creamor el nuevo archivo de python.
-Por ejemplo, se llamará jacobi.py
+Abrimos el editor de código `vim` y creamor el nuevo archivo de python.
+Por ejemplo, lo llamamos jacobi.py
 
 ## Paso 2: Importamos bibliotecas 
 Comenzamos importando las bibliotecas requeridas para el código
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 ```
 
-## Paso 3: Definimos la funicón que retornara el método de Jacobi
+## Paso 3: Definimos la función que retornara el método de Jacobi
 
 ```python
 def jacobi_relaxation(L, M, V_p, V_n, tolerance):
@@ -74,7 +74,7 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
 ```
 
 ## Paso 4: Llamado a la función
-En esta parte escribimos el llamado a la función para almacenas los resultados en nuevas variables y poder realizar la impresion en pantalla
+En esta parte escribimos el llamado a la función para almacenar los resultados en nuevas variables y poder realizar la impresión en pantalla
 
 ```python
 jacobi_vals, iterations, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
