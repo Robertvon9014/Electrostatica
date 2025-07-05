@@ -34,8 +34,13 @@ std::tuple<int, double> gaussseidel_mpi(int L, int M, double V_p, double V_n, do
   Matrix phi_copy = phi;
 
   // Calculamos posición de barras globales
-  int fil_start = int(M * 0.2), bar_len = int(M * 0.6), fil_end = fil_start + bar_len;
-  int col_plus = int(M * 0.2), col_neg = col_plus + bar_len;
+  // ---- usamos static_cast<int> para convertir de double a int de forma segura
+  int fil_start = static_cast<int>(M * 0.2);        // 2 cm desde arriba
+  int bar_len = static_cast<int>(M * 0.6);          // longitud de la barra 6 cm
+  int fil_end = fil_start + bar_len;
+
+  int col_plus = static_cast<int>(M * 0.2);         // Voltaje positivo a 2 cm del borde izquierdo
+  int col_neg = col_plus + bar_len;                 // Voltaje negativo a 2 cm del borde derecho
 
   // Inicialización: cada fila (global i = start..end)
   for (int gi = start; gi <= end; ++gi){
