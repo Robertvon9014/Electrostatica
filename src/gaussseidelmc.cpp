@@ -4,6 +4,7 @@
 #include <tuple>
 #include <sys/time.h>
 #include <omp.h>
+#include <iomanip>
 
 double seconds(){
   struct timeval tmp;
@@ -14,7 +15,7 @@ double seconds(){
   return sec;
 }
 
-std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double tolerance, int &num_procs){
+std::tuple<int, double> gaussseidel(int M, double V_p, double V_n, double tolerance, int &num_procs){
   // Creamos un arreglo de 2-dimensiones usando std::vector
   using Matrix = std::vector<std::vector<double>>;
   Matrix phi(M + 1, std::vector<double>(M + 1, 0.0));
@@ -132,7 +133,7 @@ int main(){
   // iniciamos el temporizador
   double time_1 = seconds();
 
-  std::tie(iteraciones, error) = gaussseidel(10, 100, 1.0, -1.0, 1e-5, num_procs);
+  std::tie(iteraciones, error) = gaussseidel(100, 1.0, -1.0, 1e-5, num_procs);
   std::cout << "Convergencia alcanzada en " << iteraciones << " iteraciones con error " << error << std::endl;
 
 
@@ -140,6 +141,7 @@ int main(){
   double time_2 = seconds();
 
   std::cout << "Numero de procesos: " << num_procs << std::endl;
+  std::cout << std::fixed << std::setprecision(4);
   std::cout << "Tiempo de ejecución: " << time_2 - time_1 << " segundos" << std::endl;
 
   return 0;
