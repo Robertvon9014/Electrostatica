@@ -7,7 +7,8 @@ set xtics 1
 set style data linespoints
 
 plot \
-    "tiempos_M500.dat" using 1:3 title "M = 100" lt rgb "red", \
-    "tiempos_M1000.dat" using 1:3 title "M = 200" lt rgb "blue", \
-    "tiempos_M1500.dat" using 1:3 title "M = 300" lt rgb "green"
+    "SpeedUpM500.dat" using 1:2 title "M = 100" lt rgb "red", \
+    "SpeedUpM1000.dat" using 1:2 title "M = 200" lt rgb "blue", \
+    "SpeedUpM1500.dat" using 1:2 title "M = 300" lt rgb "green" \
+    "SpeedUpM500.dat" using 1:(124.3248/$1) title "Ideal" lt rgb "black" dt 2
 
