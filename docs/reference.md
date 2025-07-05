@@ -11,5 +11,3 @@
 ## Método de Gauss-seidel
 
 ::: src.gauss_seidel
-
-# Método de Gauss-seidel implementado en c++
