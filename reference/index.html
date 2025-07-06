@@ -867,7 +867,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
 
 <h2 id="src.jaccobi_modified.jacobi_modified" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">jacobi_modified</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
 
 </h2>
 
@@ -893,20 +893,6 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
         </tr>
       </thead>
       <tbody>
-          <tr class="doc-section-item">
-            <td><code>L</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Tamaño físico de la placa cuadrada (dado en cm).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
           <tr class="doc-section-item">
             <td><code>M</code></td>
             <td>
@@ -1094,8 +1080,7 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Aplicamos el método de Jacobi modificado con sobre-relajación para resolver</span>
 <span class="sd">    el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.</span>
@@ -1106,7 +1091,6 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
 <span class="sd">    en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
 <span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
 <span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
 <span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
