@@ -5,7 +5,7 @@ import numpy as np
 # Esta función toma como argumentos el tamaño lineal de la grilla cuadrada,
 # V_p: Voltaje positivo
 # V_n: Voltaje negativo
-def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
+def jacobi_modified(M, V_p, V_n, omega, tolerance):
     """
     Aplicamos el método de Jacobi modificado con sobre-relajación para resolver
     el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.
@@ -16,7 +16,6 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
     en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.
 
     Args:
-        L (int): Tamaño físico de la placa cuadrada (dado en cm).
         M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
         V_p (float): Voltaje aplicado en la barra positiva.
         V_n (float): Voltaje aplicado en la barra negativa.
@@ -84,5 +83,5 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
         phiprime = temp
     return phi, its, delta
 
-jacobiModified_vals, iterations, error = jacobi_modified(10, 100, 1.0, -1.0, 0.9, 1e-5)
+jacobiModified_vals, iterations, error = jacobi_modified(100, 1.0, -1.0, 0.9, 1e-5)
 print(f"Convergencia alcanzada en {iterations} iteraciones con error {error}")
