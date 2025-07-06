@@ -538,6 +538,9 @@ vacío o en materiales dieléctricos).</p>
 <h2 id="metodos-implementados">Métodos implementados</h2>
 <h3 id="1-metodo-de-relajacion-de-jacobi">1. Método de relajación de Jacobi</h3>
 <p>Este método itera actualizando el potencial en cada punto de la malla usando el promedio de sus vecinos en la iteración anterior, manteniendo fijas las condiciones de frontera.</p>
+<div class="arithmatex">\[
+\phi'(x, y) = \frac{1}{4}\left[\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)\right],
+\]</div>
 <p>La idea principal de este método es que se actualiza el valor del potencial eléctrico <span class="arithmatex">\(\phi(x,y)\)</span> en cada punto de la grilla como el promedio de los valores de sus vecinos adyacentes(arriba, abajo, izquierda, derecha) que se agarran de los datos iterativos anteriores, mientras mantenemos fijas las condiciones de frontera.</p>
 <p>Esto se repite hasta que hayamos alcanzado una diferencia máxima entre dos iteraciones consecutivas, es lo que llamamos "el delta", y que este sea menor que una tolerancia escogida. Lo que nos indicará que hemos alcanzado la convergencia.</p>
 <ul>
