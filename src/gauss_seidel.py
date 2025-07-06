@@ -2,7 +2,7 @@
 
 import numpy as np
 
-def gauss_seidel(L, M, V_p, V_n, tolerance):
+def gauss_seidel(M, V_p, V_n, tolerance):
     """
     Resuelve el potencial eléctrico en una placa cuadrada usando el método de Gauss-seidel.
 
@@ -12,7 +12,6 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
     máximo entre iteraciones sea menor que la `tolerance`.
 
     Args:
-        L (int): Tamaño físico de la placa cuadrada (dado en cm).
         M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
         V_p (float): Voltaje aplicado en la barra positiva.
         V_n (float): Voltaje aplicado en la barra negativa.
@@ -24,7 +23,7 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
         delta (float): Error máximo alcanzado en la última iteración.
 
     Examples:
-        >>> phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)
+        >>> phi, its, error = jacobi_relaxation(100, 1.0, -1.0, 1e-5)
         >>> print(f"Convergencia alcanzada en {itertions} iteraciones con error de {error:.2e}")
         Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06
     """
@@ -74,6 +73,6 @@ def gauss_seidel(L, M, V_p, V_n, tolerance):
 
     return phi, its, delta
 
-gaussSeidel_vals, iterations, error = gauss_seidel(10, 100, 1.0, -1.0, 1e-5)
+gaussSeidel_vals, iterations, error = gauss_seidel(100, 1.0, -1.0, 1e-5)
 print(f"Convergencia alcanzada en {iterations} iteraciones con error de {error:.2e}")
 # print("Valores grilla phi[50][25] ", gaussSeidel_vals[50][25])
