@@ -699,7 +699,7 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 <li>Speedup real muestra los valores obtenido al correr el código en la computadora.</li>
 </ul>
 <p>Observaciones
-1. Aceleración sublineal:
+1. Aceleración sublineal: \
     En todos los casos, el speedup real con 2 hilos está por debajo del ideal (1.68, 1.55 y 1.54 en vez de 2). Esto es normal y esperado debido a:</p>
 <div class="highlight"><pre><span></span><code>  - Sobrecarga de gestión de hilos.
   - Costos de sincronización y comunicación entre threads.
@@ -707,7 +707,7 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 </code></pre></div>
 <ol>
 <li>
-<p>Mejor escalabilidad con problema pequeño (M=500):
+<p>Mejor escalabilidad con problema pequeño (M=500):\
     El speedup para <span class="arithmatex">\(𝑀 = 500\)</span> con 2 hilos (1.68) es mayor que para <span class="arithmatex">\(𝑀 = 1000\)</span> y <span class="arithmatex">\(𝑀 = 1500\)</span> (alrededor de 1.55). Esto puede ser por:</p>
 <ul>
 <li>El trabajo extra por manejar datos mayores y la sobrecarga paralela que no escala igual.</li>
@@ -716,7 +716,7 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 </ul>
 </li>
 <li>
-<p>Escalabilidad limitada a 2 hilos:
+<p>Escalabilidad limitada a 2 hilos:\
       Solo se tiene datos para 1 y 2 hilos. Con solo dos puntos es difícil trazar conclusiones sólidas. Idealmente, pruebas con más hilos ayudarían 
       a ver tendencias.</p>
 </li>
