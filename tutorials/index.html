@@ -310,7 +310,9 @@
 
 
 <h1 id="tutorial">Tutorial</h1>
-<p>En esta parte nos centraremos en un efonque orientado al aprendizaje. Aprenderemos como instalar las bibliotecas a utilizar y como implementar el método de relajacion, sobre-relajacion de Jacobi, además de implementar el método de Gauss-Seidel en Python y en C++.</p>
+<p>En esta parte nos centraremos en un efonque orientado al aprendizaje. Aprenderemos como instalar las bibliotecas a utilizar y como implementar el 
+método de relajacion de Jacobi. Los métodos de sobre-relajación de Jacobi y Gauss-Seidel siguen la misma métodología de implementación exceptuando 
+los códigos de C++ que sus bibliotecas a utilizar y compilación es distinta.</p>
 <h1 id="requisitos-previos">Requisitos previos</h1>
 <p>Antes de comenzar necesitamos tener instalado la siguiente biblioteca en nuestro entorno de python:
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>instal<span class="w"> </span>numpy
@@ -320,12 +322,29 @@ pip<span class="w"> </span>install<span class="w"> </span>matplotlib
 <p>Abrimos el editor de código <code>vim</code> y creamor el nuevo archivo de python.
 Por ejemplo, lo llamamos jacobi.py</p>
 <h2 id="paso-2-importamos-bibliotecas">Paso 2: Importamos bibliotecas</h2>
-<p>Comenzamos importando las bibliotecas requeridas para el código</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<p>Comenzamos importando las bibliotecas requeridas para el código de Jacobi, Sobre-relajación de Jacobi,
+Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compartida y distribuida.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>               <span class="c1"># Biblioteca para operaciones numéricas eficientes, especialmente con arreglos y matrices</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># Módulo principal para graficar en 2D con una interfaz similar a MATLAB</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>       <span class="c1"># Acceso a los mapas de colores (colormaps) predefinidos de Matplotlib</span>
 </code></pre></div>
-<h2 id="paso-3-definimos-la-funcion-que-retornara-el-metodo-de-jacobi">Paso 3: Definimos la función que retornara el método de Jacobi</h2>
+<p>Librerías usadas para Gauss-seidel
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="c1">      // Biblioteca estándar para entrada/salida (cout, cerr, etc.)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span><span class="c1">         // Biblioteca matemática (std::abs, std::pow, std::sqrt, etc.)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="c1">        // Contenedor dinámico tipo array (std::vector)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tuple&gt;</span><span class="c1">         // Permite usar std::tuple para retornar múltiples valores</span>
+</code></pre></div></p>
+<p>Librerías usadas para Gauss-Seidel Memoria compartida
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="c1">      // Biblioteca estándar para entrada/salida (cout, cerr, etc.)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cmath&gt;</span><span class="c1">         // Biblioteca matemática (std::abs, std::pow, std::sqrt, etc.)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="c1">        // Contenedor dinámico tipo array (std::vector)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tuple&gt;</span><span class="c1">         // Permite usar std::tuple para retornar múltiples valores</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sys/time.h&gt;</span><span class="c1">    // Biblioteca para manejo de tiempo con mayor precisión (gettimeofday)</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span><span class="c1">         // Biblioteca para programación paralela con OpenMP</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iomanip&gt;</span><span class="c1">       // Biblioteca para manipular formato de salida (std::setprecision, std::fixed)</span>
+</code></pre></div></p>
+<h2 id="paso-3-definimos-las-funciones-que-retornaran-los-metodos-de-jacobi-sobre-relajacion-de-jacobi-gauss-seidel-y-gauss-seidel-en-memoria-compartida-y-distribuida">Paso 3: Definimos las funciones que retornarán los métodos de Jacobi, Sobre-relajación de Jacobi, Gauss-Seidel, y Gauss-Seidel en memoria compartida y distribuida.</h2>
+<p>Método de relajación de Jacobi
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
     <span class="c1"># Primero creamos los arreglos 2-dimensionales de la grilla</span>
     <span class="c1"># Vamos a necesitar dos según la regla de Jacobi</span>
@@ -373,28 +392,526 @@ Por ejemplo, lo llamamos jacobi.py</p>
         <span class="c1"># El nuevo phiprime es el phi viejo</span>
         <span class="n">phiprime</span> <span class="o">=</span> <span class="n">temp</span>
     <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
+</code></pre></div></p>
+<p>Método de Sobre-relajación de jacobi
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aplicamos el método de Jacobi modificado con sobre-relajación para resolver</span>
+<span class="sd">    el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.</span>
+
+<span class="sd">    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.</span>
+<span class="sd">    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:</span>
+<span class="sd">    Una posee un potencial `V_p` y otra con `V_n`. Se actualiza iterativamente el potencial</span>
+<span class="sd">    en el resto de la grilla usando un factor de sobre-relajación `omega` para acelerar la convergencia.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
+<span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
+<span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
+<span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
+<span class="sd">        tolerance (float): Tolerancia para el criterio de convergencia.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.</span>
+<span class="sd">        its (int): Número de iteraciones realizadas.</span>
+<span class="sd">        delta (float): Error máximo alcanzado en la última iteración.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_modified(10, 100, 1.0, -1.0, 1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Iteraciones: {its}, Error final: {error:.2e}&quot;)</span>
+<span class="sd">        error en la iteración.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Primero creamos los arreglos 2-dimensionales de la grilla</span>
+    <span class="c1"># Vamos a necesitar dos según la regla de Jacobi</span>
+    <span class="c1"># Note que usamos M+1, debido a que debemos contener la condición de frontera</span>
+    <span class="c1"># phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># Validamos que el tamaño M sea mayor a 10</span>
+    <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) deber ser mayor a 10&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
+
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
+
+    <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
+    <span class="c1"># Recuerde accesos de listas en np.ndarray</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_plus</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_p</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_n</span>
+    <span class="c1"># phiprime se necesita para la iteración</span>
+    <span class="n">phiprime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># Iteración de Jacobi</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">its</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+        <span class="c1"># Calculamos la iteración</span>
+        <span class="n">its</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_plus</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_neg</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span><span class="p">:</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="c1"># Condición de frontera</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">M</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">M</span><span class="p">:</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="c1"># Iteración principal</span>
+                <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># COMPLETE AQUÍ</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">omega</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+                    <span class="c1">#phiprime[i,j] = (1 - omega) * phi[i,j] + (omega / 4) * (phi[i + 1, j] + phi[i - 1, j] + phi[i, j + 1] + phi[i, j - 1])</span>
+        <span class="c1"># Calculamos la diferencia máxima con respecto a los valores anteriores</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="n">phiprime</span><span class="p">))</span>
+        <span class="c1"># Ahora intercambiamos los arreglos para la nueva iteración</span>
+        <span class="c1"># El nuevo phi es el phiprime</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">phi</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">phiprime</span>
+        <span class="c1"># El nuevo phiprime es el phi viejo</span>
+        <span class="n">phiprime</span> <span class="o">=</span> <span class="n">temp</span>
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
+</code></pre></div></p>
+<p>Método de Gauss-Seidel</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">gauss_seidel</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resuelve el potencial eléctrico en una placa cuadrada usando el método de Gauss-seidel.</span>
+
+<span class="sd">    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.</span>
+<span class="sd">    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:</span>
+<span class="sd">    Una posee un potencial `V_p` y otra con `V_n`. La función itera hasta que el cambio</span>
+<span class="sd">    máximo entre iteraciones sea menor que la `tolerance`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
+<span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
+<span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
+<span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
+<span class="sd">        tolerance (float): Tolerancia para el criterio de convergencia.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.</span>
+<span class="sd">        its (int): Número de iteraciones realizadas.</span>
+<span class="sd">        delta (float): Error máximo alcanzado en la última iteración.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Convergencia alcanzada en {itertions} iteraciones con error de {error:.2e}&quot;)</span>
+<span class="sd">        Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Primero creamos el arreglo 2-dimensionales de la grilla</span>
+    <span class="c1"># Note que usamos M+1, debido a que debemos contener la condición de frontera</span>
+    <span class="c1"># phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># Validamos que M sea mayor que 10</span>
+    <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grila (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.6</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
+
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
+
+    <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
+    <span class="c1"># Recuerde accesos de listas en np.ndarray</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_plus</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_p</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_n</span>
+    <span class="c1"># Vamos a guardar una copia para evaluar el error</span>
+    <span class="n">phi_copy</span> <span class="o">=</span> <span class="n">phi</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># Iteración de Gauss-Seidel</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">its</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">delta</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+        <span class="c1"># Calculamos la iteración</span>
+        <span class="n">its</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+                <span class="c1"># Condición de frontera</span>
+                <span class="c1"># En este caso, en la frontera los valores no se modifican</span>
+                <span class="k">if</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span> <span class="ow">and</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">col_plus</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_neg</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Iteración principal</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># COMPLETE AQUÍ</span>
+                    <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+        <span class="c1"># Calculamos la diferencia máxima con respecto a los valores anteriores</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="n">phi_copy</span><span class="p">))</span>
+        <span class="c1"># Copiamos los valores de la nueva iteración</span>
+        <span class="n">phi_copy</span> <span class="o">=</span> <span class="n">phi</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
 </code></pre></div>
+<p>Método de Gauss-Seidel Memoria Compartida
+<div class="highlight"><pre><span></span><code><span class="kt">double</span><span class="w"> </span><span class="nf">seconds</span><span class="p">(){</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">timeval</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sec</span><span class="p">;</span>
+<span class="w">  </span><span class="n">gettimeofday</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">timezone</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">  </span><span class="n">sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">tv_sec</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">tmp</span><span class="p">.</span><span class="n">tv_usec</span><span class="p">)</span><span class="o">/</span><span class="mf">1000000.0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sec</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @brief Resuelve el potencial eléctrico en una placa cuadrada con método Gauss-Seidel usando red-black ordering y OpenMP.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Se impone una grilla de tamaño `M x M` sobre la placa, con dos barras verticales:</span>
+<span class="cm"> * una con voltaje positivo `V_p` y otra con voltaje negativo `V_n`. </span>
+<span class="cm"> * El algoritmo aplica el método de Gauss-Seidel con ordenamiento red-black en paralelo.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param M Número de divisiones de la grilla (debe ser mayor a 10)</span>
+<span class="cm"> * @param V_p Voltaje positivo aplicado</span>
+<span class="cm"> * @param V_n Voltaje negativo aplicado</span>
+<span class="cm"> * @param tolerance Tolerancia para el criterio de convergencia</span>
+<span class="cm"> * @param num_procs Referencia donde se guardará el número de procesos/hilos usados</span>
+<span class="cm"> * @return std::tuple&lt;int, double&gt; Número de iteraciones realizadas y error final</span>
+<span class="cm"> */</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gaussseidel</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">V_p</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">V_n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">tolerance</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&amp;</span><span class="n">num_procs</span><span class="p">){</span>
+<span class="w">  </span><span class="c1">// Creamos un arreglo de 2-dimensiones usando std::vector</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">Matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">Matrix</span><span class="w"> </span><span class="nf">phi</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">));</span>
+
+<span class="w">  </span><span class="c1">// ---- Validar que M sea mayor a 10</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">10</span><span class="p">){</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;El tamaño de la grilla (M) debe ser mayor a 10&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// ---- Calcular la reposición dependiendo del valor de M</span>
+<span class="w">  </span><span class="c1">// ---- Posiciones expresadas en índices de grilla</span>
+<span class="w">  </span><span class="c1">// ---- usamos static_cast&lt;int&gt; para convertir de double a int de forma segura</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">fil_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">        </span><span class="c1">// 2 cm desde arriba</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">bar_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.6</span><span class="p">);</span><span class="w">          </span><span class="c1">// longitud de la barra 6 cm</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">fil_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fil_start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bar_len</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">         </span><span class="c1">// Voltaje positivo a 2 cm del borde izquierdo</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">col_neg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bar_len</span><span class="p">;</span><span class="w">                 </span><span class="c1">// Voltaje negativo a 2 cm del borde derecho</span>
+
+<span class="w">  </span><span class="c1">// Colocamos las posiciones iniciales</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fil_start</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">fil_end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">    </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">col_plus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">V_p</span><span class="p">;</span>
+<span class="w">    </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">col_neg</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">V_n</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Guardamos una copia</span>
+<span class="w">  </span><span class="n">Matrix</span><span class="w"> </span><span class="n">phi_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phi</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Iteración de Gauss-seidel</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">delta</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">tolerance</span><span class="p">){</span>
+<span class="w">    </span><span class="n">its</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="cp">#pragma omp parallel </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="cp">#pragma omp single</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="n">num_procs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="cm">/* --- Implementar el método de red-black ordering</span>
+<span class="cm">       * Este método consiste en colorear todo el dominio </span>
+<span class="cm">       * de la grilla como si fuera un tablero de ajedrez:</span>
+<span class="cm">       * en celdas rojas y negras</span>
+<span class="cm">       * R N R N </span>
+<span class="cm">       * N R N R </span>
+<span class="cm">       * R N R N </span>
+<span class="cm">       * N R N R</span>
+<span class="cm">       * La clave de este método es que cada paso iremos </span>
+<span class="cm">       * actualizando las celdas rojas primero (usando las</span>
+<span class="cm">       * negras) y luego las celdas negras (usando las rojas</span>
+<span class="cm">       * recién actualizadas). */</span>
+
+<span class="w">      </span><span class="c1">// Actualizamos las celdas rojas</span>
+<span class="w">      </span><span class="cp">#pragma omp for collapse(2)</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">fil_start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">fil_end</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_neg</span><span class="p">)){</span>
+<span class="w">              </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="p">{</span>
+<span class="w">              </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// Actualizamos las celdas negras</span>
+<span class="w">      </span><span class="cp">#pragma omp for collapse(2)</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">fil_start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">fil_end</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_neg</span><span class="p">)){</span>
+<span class="w">              </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="p">{</span>
+<span class="w">              </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="mi">-1</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Calculamos la diferencia máxima con respecto a los valores anteriores</span>
+<span class="w">    </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="cp">#pragma omp parallel reduction(max:delta)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="cp">#pragma omp for</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">          </span><span class="kt">double</span><span class="w"> </span><span class="n">diferencia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">phi_copy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">diferencia</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">delta</span><span class="p">){</span>
+<span class="w">            </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diferencia</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Copiamos los valores de la nueva iteración</span>
+
+<span class="w">    </span><span class="n">phi_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phi</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">//std::cout &lt;&lt; &quot;phi[50][25] = &quot; &lt;&lt; phi[50][25] &lt;&lt; std::endl;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">its</span><span class="p">,</span><span class="w"> </span><span class="n">delta</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+Método de Gauss-Seidel Memoria Distribuida
+<div class="highlight"><pre><span></span><code><span class="kt">double</span><span class="w"> </span><span class="nf">seconds</span><span class="p">(){</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">timeval</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="w">  </span><span class="n">gettimeofday</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">tv_sec</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">tv_usec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-6</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Función principal paralela usando memoria distribuida</span>
+<span class="cm">/**</span>
+<span class="cm"> * @brief Resuelve el potencial eléctrico en una placa usando el método de Gauss-Seidel con ordenamiento red-black y MPI.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Se divide la grilla de tamaño `M x M` entre los procesos disponibles.</span>
+<span class="cm"> * Cada proceso calcula una porción del dominio y colabora usando comunicación punto a punto.</span>
+<span class="cm"> * Se usan halos (bordes fantasma) para compartir información entre procesos vecinos.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @param L Longitud de la placa (no se usa en el cálculo actual)</span>
+<span class="cm"> * @param M Número de divisiones en la grilla (resolución espacial)</span>
+<span class="cm"> * @param V_p Voltaje positivo aplicado a una barra vertical</span>
+<span class="cm"> * @param V_n Voltaje negativo aplicado a otra barra vertical</span>
+<span class="cm"> * @param tolerance Tolerancia para el criterio de convergencia (máximo delta permitido)</span>
+<span class="cm"> * @return std::tuple&lt;int, double&gt; Par con número de iteraciones realizadas y el error final (delta)</span>
+<span class="cm"> */</span>
+
+<span class="c1">// Función principal paralela usando memoria distribuida</span>
+<span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gaussseidel_mpi</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">V_p</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">V_n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">tolerance</span><span class="p">){</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">Matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;M &gt; 10&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Determinar cuántas filas maneja cada proceso</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">local_rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">local_rows</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">rem</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">local_rows</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rem</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">local_rows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// inclusive</span>
+
+<span class="w">  </span><span class="c1">// Creamos matriz local con halos (2 filas extra)</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">Matrix</span><span class="w"> </span><span class="nf">phi</span><span class="p">(</span><span class="n">local_rows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">));</span>
+<span class="w">  </span><span class="n">Matrix</span><span class="w"> </span><span class="n">phi_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phi</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Calculamos posición de barras globales</span>
+<span class="w">  </span><span class="c1">// ---- usamos static_cast&lt;int&gt; para convertir de double a int de forma segura</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">fil_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">        </span><span class="c1">// 2 cm desde arriba</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">bar_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.6</span><span class="p">);</span><span class="w">          </span><span class="c1">// longitud de la barra 6 cm</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">fil_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fil_start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bar_len</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.2</span><span class="p">);</span><span class="w">         </span><span class="c1">// Voltaje positivo a 2 cm del borde izquierdo</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">col_neg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bar_len</span><span class="p">;</span><span class="w">                 </span><span class="c1">// Voltaje negativo a 2 cm del borde derecho</span>
+
+<span class="w">  </span><span class="c1">// Inicialización: cada fila (global i = start..end)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="p">;</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">gi</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">gi</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">fil_start</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">fil_end</span><span class="p">){</span>
+<span class="w">      </span><span class="n">phi</span><span class="p">[</span><span class="n">gi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">col_plus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">V_p</span><span class="p">;</span>
+<span class="w">      </span><span class="n">phi</span><span class="p">[</span><span class="n">gi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">col_neg</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">V_n</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">delta</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">tolerance</span><span class="p">){</span>
+<span class="w">    </span><span class="n">its</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// -- Intercambio halo superior/inferior</span>
+<span class="w">    </span><span class="n">MPI_Request</span><span class="w"> </span><span class="n">active_reqs</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">num_reqs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">      </span><span class="n">MPI_Irecv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">cols</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">active_reqs</span><span class="p">[</span><span class="n">num_reqs</span><span class="o">++</span><span class="p">]);</span>
+<span class="w">      </span><span class="n">MPI_Isend</span><span class="p">(</span><span class="o">&amp;</span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">cols</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">active_reqs</span><span class="p">[</span><span class="n">num_reqs</span><span class="o">++</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)){</span>
+<span class="w">      </span><span class="n">MPI_Irecv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">phi</span><span class="p">[</span><span class="n">local_rows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">cols</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">active_reqs</span><span class="p">[</span><span class="n">num_reqs</span><span class="o">++</span><span class="p">]);</span>
+<span class="w">      </span><span class="n">MPI_Isend</span><span class="p">(</span><span class="o">&amp;</span><span class="n">phi</span><span class="p">[</span><span class="n">local_rows</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">cols</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">active_reqs</span><span class="p">[</span><span class="n">num_reqs</span><span class="o">++</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">MPI_Waitall</span><span class="p">(</span><span class="n">num_reqs</span><span class="p">,</span><span class="w"> </span><span class="n">active_reqs</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_STATUSES_IGNORE</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// --- Actualizamos celdas rojas</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">local_rows</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"> </span><span class="c1">// gi = global i</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">gi</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">fil_start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">fil_end</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_neg</span><span class="p">)){</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="k">else</span><span class="p">{</span>
+<span class="w">            </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w">  </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// --- Actualizamos las celdas negras</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">local_rows</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">gi</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">fil_start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">gi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">fil_end</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_plus</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">col_neg</span><span class="p">)){</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="k">else</span><span class="p">{</span>
+<span class="w">            </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span><span class="w"> </span><span class="c1">// Sincronizamos los colores</span>
+
+<span class="w">    </span><span class="c1">// --- Cálculo del delta local</span>
+<span class="w">    </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">local_rows</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">){</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">diferencia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">phi_copy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">diferencia</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">delta</span><span class="p">){</span>
+<span class="w">          </span><span class="n">delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diferencia</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// --- Reducción global del delta</span>
+<span class="w">    </span><span class="n">MPI_Allreduce</span><span class="p">(</span><span class="n">MPI_IN_PLACE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">delta</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// --- Copiamos los valores de la nueva iteración</span>
+<span class="w">    </span><span class="n">phi_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phi</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// --- Imprimir el proceso que posee la fila 50</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">gi_target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">gi_target</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">gi_target</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="p">){</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">li</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gi_target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;phi[50][25] = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">phi</span><span class="p">[</span><span class="n">li</span><span class="p">][</span><span class="mi">25</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">its</span><span class="p">,</span><span class="w"> </span><span class="n">delta</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <h2 id="paso-4-llamado-a-la-funcion">Paso 4: Llamado a la función</h2>
 <p>En esta parte escribimos el llamado a la función para almacenar los resultados en nuevas variables y poder realizar la impresión en pantalla</p>
-<div class="highlight"><pre><span></span><code><span class="n">jacobi_vals</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_relaxation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+<ul>
+<li>
+<p>Llamado a la función del Método de Jacobi
+  <div class="highlight"><pre><span></span><code><span class="n">jacobi_vals</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_relaxation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">iterations</span><span class="si">}</span><span class="s2"> iteraciones con error </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+</code></pre></div></p>
+</li>
+<li>
+<p>Llamado a la función del Método de Sobre-relajación de Jacobi
+  <div class="highlight"><pre><span></span><code><span class="n">jacobiModified_vals</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_modified</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">iterations</span><span class="si">}</span><span class="s2"> iteraciones con error </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>Llamado a la función del método de Gauss-Seidel
+  <div class="highlight"><pre><span></span><code><span class="n">gaussSeidel_vals</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">gauss_seidel</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">iterations</span><span class="si">}</span><span class="s2"> iteraciones con error de </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># print(&quot;Valores grilla phi[50][25] &quot;, gaussSeidel_vals[50][25])</span>
+</code></pre></div></li>
+<li>LLamado a al función del método de Gauss-Seidel memoria compartida
+  ```C++
+  int main(){
+  int iteraciones;
+  double error;</li>
+</ul>
+<p>int num_procs;</p>
+<p>std:: cout.precision(10); // configuramos la salida de decimales con una precision de 10 números
+  // iniciamos el temporizador
+  double time_1 = seconds();</p>
+<p>std::tie(iteraciones, error) = gaussseidel(500, 1.0, -1.0, 1e-5, num_procs);
+  std::cout &lt;&lt; "Convergencia alcanzada en " &lt;&lt; iteraciones &lt;&lt; " iteraciones con error " &lt;&lt; error &lt;&lt; std::endl;</p>
+<p>// Finalizamos el temporizador
+  double time_2 = seconds();</p>
+<p>std::cout &lt;&lt; "Numero de procesos: " &lt;&lt; num_procs &lt;&lt; std::endl;
+  std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(4);
+  std::cout &lt;&lt; "Tiempo de ejecución: " &lt;&lt; time_2 - time_1 &lt;&lt; " segundos" &lt;&lt; std::endl;</p>
+<p>return 0;
+}
+  ```</p>
+<p>Llamado a la función de Gauss-Seidel memoria distribuida
+  ```C++
+  int main(int argc, char**argv){
+  MPI_Init(&amp;argc,&amp;argv);
+  int rank; MPI_Comm_rank(MPI_COMM_WORLD,&amp;rank);</p>
+<p>double t0 = seconds();
+  auto [its, delta] = gaussseidel_mpi(10, 100, 1.0, -1.0, 1e-5);
+  double t1 = seconds();</p>
+<p>if(rank == 0){
+    std::cout&lt;&lt;"Iteraciones: "&lt;&lt;its&lt;&lt;" error: "&lt;&lt;delta&lt;&lt;"\n";
+    std::cout&lt;&lt;"Tiempo MPI: "&lt;&lt;(t1-t0)&lt;&lt;" s\n";
+  }</p>
+<p>MPI_Finalize();
+  return 0;
+}
+  ```</p>
 <h2 id="paso-5-ejecutamos-el-codigo">Paso 5: Ejecutamos el código</h2>
-<p>guardamos el archivo de jacobi.py y lo ejecutamos
+<p>guardamos el archivo de jacobi.py, Sobre-relajación de Jacobi, Gauss-Seidel, Gauss-Seidel memoria compartida, memoria distribuida y lo ejecutamos
 - primero añadimos permisos de ejecución:
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>jacobi.py
+chmod<span class="w"> </span>+x<span class="w"> </span>jacobi_modified.py
+chmod<span class="w"> </span>+x<span class="w"> </span>gauss_seidel.py
 </code></pre></div>
 - Segundo ejecutamos el código
 <div class="highlight"><pre><span></span><code>./jacobi.py
-</code></pre></div></p>
+./jacobi_modified.py
+./gauss_seidel.py
+</code></pre></div>
+- para ejecutar los código .cpp se hacen de la siguiente mánera:
+  - para gaussseidel.cpp
+    <div class="highlight"><pre><span></span><code>g++<span class="w"> </span>gaussseidel.cpp<span class="w"> </span>-o<span class="w"> </span>gaussseidel
+g++<span class="w"> </span>-fopenmp<span class="w"> </span>gaussseidelmc.cpp<span class="w"> </span>-o<span class="w"> </span>gaussseidelmc
+mpicxx<span class="w"> </span>gaussseidelmd.cpp<span class="w"> </span>-o<span class="w"> </span>gaussseidelmd.x
+</code></pre></div>
+  - para ejecutar siguiendo el orden anterior
+    <div class="highlight"><pre><span></span><code>./gaussseidel
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span>N<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./gaussseidelmc
+mpirun<span class="w"> </span>-np<span class="w"> </span>X<span class="w"> </span>./gaussseidelmd.x
+</code></pre></div>
+      - Donde N es el número de hilos a utilizar.
+      - Donde X es el número de procesos a utilizar.</p>
 <h2 id="paso-6-graficar">Paso 6: Graficar</h2>
-<p>Escribimos el código a utilizar para realizar la gráfica esperada</p>
+<p>Escribimos el código a utilizar para realizar la gráfica esperada
+Para los métodos escritos en python la gráfica es similar por ende solo presentamos un código e imagen.
 <div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">jacobi_vals</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>  <span class="c1"># Aplicar colormap explícitamente</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Potencial eléctrico&#39;</span><span class="p">)</span>  <span class="c1"># Añadir barra de color con etiqueta</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Distribución de potencial - Método de relajación de Jacobi&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;Jacobi.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># Guarda la imagen con buena resolución</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</code></pre></div>
+</code></pre></div></p>
+<p>Para el método de Gauss-Seidel memoria compartida y distribuida se hizo la gráfica de escalabilidad presentada en el apartado de:
+- <a href="../explanation/">Explicación</a></p>
 <h3 id="grafica">Gráfica:</h3>
 <p><img alt="Distribución de Potencial" src="../Jacobi.png" /></p>
 
