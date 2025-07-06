@@ -34,7 +34,7 @@ def gauss_seidel(M, V_p, V_n, tolerance):
 
     # Validamos que M sea mayor que 10
     if M <= 10:
-        raise ValueError("El tamaño de la grila (M) debe ser mayor a 10")
+        raise ValueError("El tamaño de la grilla (M) debe ser mayor a 10")
 
     # --- Calculamos la reposición dependiendo del valor de M
     fil_start = int(M * 0.2) # 2 cm desde arriba
