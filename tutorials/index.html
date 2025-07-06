@@ -841,41 +841,49 @@ Método de Gauss-Seidel Memoria Distribuida
 <span class="c1"># print(&quot;Valores grilla phi[50][25] &quot;, gaussSeidel_vals[50][25])</span>
 </code></pre></div></li>
 <li>LLamado a al función del método de Gauss-Seidel memoria compartida
-  ```C++
-  int main(){
-  int iteraciones;
-  double error;</li>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">iteraciones</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">num_procs</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="w"> </span><span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w"> </span><span class="c1">// configuramos la salida de decimales con una precision de 10 números</span>
+<span class="w">  </span><span class="c1">// iniciamos el temporizador</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">time_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seconds</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">iteraciones</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussseidel</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1e-5</span><span class="p">,</span><span class="w"> </span><span class="n">num_procs</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Convergencia alcanzada en &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">iteraciones</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; iteraciones con error &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+
+<span class="w">  </span><span class="c1">// Finalizamos el temporizador</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">time_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seconds</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Numero de procesos: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">num_procs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">fixed</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Tiempo de ejecución: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">time_2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">time_1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; segundos&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></li>
 </ul>
-<p>int num_procs;</p>
-<p>std:: cout.precision(10); // configuramos la salida de decimales con una precision de 10 números
-  // iniciamos el temporizador
-  double time_1 = seconds();</p>
-<p>std::tie(iteraciones, error) = gaussseidel(500, 1.0, -1.0, 1e-5, num_procs);
-  std::cout &lt;&lt; "Convergencia alcanzada en " &lt;&lt; iteraciones &lt;&lt; " iteraciones con error " &lt;&lt; error &lt;&lt; std::endl;</p>
-<p>// Finalizamos el temporizador
-  double time_2 = seconds();</p>
-<p>std::cout &lt;&lt; "Numero de procesos: " &lt;&lt; num_procs &lt;&lt; std::endl;
-  std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(4);
-  std::cout &lt;&lt; "Tiempo de ejecución: " &lt;&lt; time_2 - time_1 &lt;&lt; " segundos" &lt;&lt; std::endl;</p>
-<p>return 0;
-}
-  ```</p>
 <p>Llamado a la función de Gauss-Seidel memoria distribuida
-  ```C++
-  int main(int argc, char**argv){
-  MPI_Init(&amp;argc,&amp;argv);
-  int rank; MPI_Comm_rank(MPI_COMM_WORLD,&amp;rank);</p>
-<p>double t0 = seconds();
-  auto [its, delta] = gaussseidel_mpi(10, 100, 1.0, -1.0, 1e-5);
-  double t1 = seconds();</p>
-<p>if(rank == 0){
-    std::cout&lt;&lt;"Iteraciones: "&lt;&lt;its&lt;&lt;" error: "&lt;&lt;delta&lt;&lt;"\n";
-    std::cout&lt;&lt;"Tiempo MPI: "&lt;&lt;(t1-t0)&lt;&lt;" s\n";
-  }</p>
-<p>MPI_Finalize();
-  return 0;
-}
-  ```</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="n">argv</span><span class="p">){</span>
+<span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span><span class="w"> </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seconds</span><span class="p">();</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">its</span><span class="p">,</span><span class="w"> </span><span class="n">delta</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussseidel_mpi</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1e-5</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seconds</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Iteraciones: &quot;</span><span class="o">&lt;&lt;</span><span class="n">its</span><span class="o">&lt;&lt;</span><span class="s">&quot; error: &quot;</span><span class="o">&lt;&lt;</span><span class="n">delta</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Tiempo MPI: &quot;</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="s">&quot; s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <h2 id="paso-5-ejecutamos-el-codigo">Paso 5: Ejecutamos el código</h2>
 <p>guardamos el archivo de jacobi.py, Sobre-relajación de Jacobi, Gauss-Seidel, Gauss-Seidel memoria compartida, memoria distribuida y lo ejecutamos
 - primero añadimos permisos de ejecución:
