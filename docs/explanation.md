@@ -96,7 +96,27 @@ Implementación equivalente al método de Gauss-Seidel en Python, pero usando C+
 
 ---
 
-## Condiciones de frontera y configuración de la grilla
+## 5. Método de Gauss-Seidel en C++ con OpenMP (memoria compartida)
+
+Paralelizamos el método de Gauss-Seidel utilizando OpenMP y un método conocido como Red-black ordering, esta técnica nos permite ordenar los puntos
+de la grilla como si fuera un tablero de ajedrez (alternando "celdas rojas" y "negras"). Esto facilita que las actualizaciones no presenten conflictos de escritura en memoria compartida.
+
+- paralelismo por hilos usando `#pragma omp parallel`. <br>
+- Ordenamiento rojo-negro: actualizamos primero las celas $(i + j)$ par (rojas), luego las impares (negras).<br>
+
+---
+
+## 6. Método de Gauss-Seidel en C++ con MPI (memoria distribuida).
+
+Este paralelismo distribuido utilizado con MPI (Message Passing Interface) a diferencia de OpenMP los datos estan divididos de manera que sus procesos son independientes y se comunican a través del intercambio de mensajes.
+
+- Se divide la malla de forma horizontal y cada proceso calcula una porción. <br>
+- Se implemente el método red-black ordering dentro de cada proceso. <br>
+- Se realiza una reducción global del error con `MPI_ALLREDUCE`.
+
+---
+
+## 7. Condiciones de frontera y configuración de la grilla
 
 - La placa se discretiza en una malla de \((M+1) \times (M+1)\) puntos.
 - Dos barras verticales se colocan a 2 cm de cada borde lateral, con longitudes de 6 cm, y potenciales fijos \(V_p\) y \(V_n\).
@@ -104,23 +124,23 @@ Implementación equivalente al método de Gauss-Seidel en Python, pero usando C+
 
 ---
 
-## Convergencia y criterio de parada
+## 8. Convergencia y criterio de parada
 
 La iteración se detiene cuando la diferencia máxima absoluta entre iteraciones consecutivas es menor que una tolerancia dada.
 
 ---
 
-## Comparación y resultados
+## 9. Comparación y resultados
 
 - El método de Gauss-Seidel converge más rápido que Jacobi.
 - La sobre-relajación mejora aún más la velocidad si se escoge un \(\omega\) adecuado (por ejemplo, 0.9). Además de ello la forma geométrica y las condiciones de frontera son las adecuadas.
 - La implementación en C++ es más eficiente y es base para paralelización futura.
 
-## Gráfica de escalabilidad
+## 10. Gráfica de escalabilidad
 En esta sección incluiremos una gráfica de escalabilidad tomando en cuenta 2 hilos(threads) y para 3 tamaños de M distintos(M = 500, 1000, 1500).
 ![Gráfica de escalabilidad](SpeedUp.png)
 
-## Análisis
+## 11. Análisis
 | M    | Hilos | Speedup real | Speedup ideal |
 | ---- | ----- | ------------ | ------------- |
 | 500  | 1     | 1.00         | 1             |
