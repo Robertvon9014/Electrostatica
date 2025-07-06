@@ -383,6 +383,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#grafica-de-escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gráfica de escalabilidad
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analisis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Análisis
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -504,6 +522,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#grafica-de-escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gráfica de escalabilidad
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analisis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Análisis
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -525,11 +561,24 @@
 <div class="arithmatex">\[
 \frac{\partial^2 \phi}{\partial x^2} + \frac{\partial^2 \phi}{\partial y^2} = 0
 \]</div>
-<p>en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor con potenciales <span class="arithmatex">\(V_p\)</span> y <span class="arithmatex">\(V_n\)</span>.</p>
+<p>Esta ecuación nos permite describir el comportamiento de un potencial eléctrico sobre una región donde no existen cargas libres (es decir, en el 
+vacío o en materiales dieléctricos).</p>
+<p>El dominio de este problema se encuentra  en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor:
+- Una barra se localiza cerca del borde izquierdo y se mantiene con potencial constante positivo <span class="arithmatex">\(V_p\)</span>.
+- Otra barra se encuentra cerca del borde derecho con potencial negativo <span class="arithmatex">\(V_n\)</span>.</p>
+<p>La longitud de ambas barras es de 6 cm, y están separadas a la misma distancia que su longitud, lo cual nos permite visualizar una configuración simétrica con respecto al eje horizontal.</p>
+<p>Condiciones del problema:
+  - En las condiciones del problemas donde no se especifique el potencial se asume que la condición de frontera tiene un valor inicial de cero, o 
+    bien el potencial se actualiza iterativamente hasta converger.</p>
 <hr />
 <h2 id="metodos-implementados">Métodos implementados</h2>
 <h3 id="1-metodo-de-relajacion-de-jacobi">1. Método de relajación de Jacobi</h3>
 <p>Este método itera actualizando el potencial en cada punto de la malla usando el promedio de sus vecinos en la iteración anterior, manteniendo fijas las condiciones de frontera.</p>
+<div class="arithmatex">\[
+\phi'(x, y) = \frac{1}{4}\left[\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)\right],
+\]</div>
+<p>La idea principal de este método es que se actualiza el valor del potencial eléctrico <span class="arithmatex">\(\phi(x,y)\)</span> en cada punto de la grilla como el promedio de los valores de sus vecinos adyacentes(arriba, abajo, izquierda, derecha) que se agarran de los datos iterativos anteriores, mientras mantenemos fijas las condiciones de frontera.</p>
+<p>Esto se repite hasta que hayamos alcanzado una diferencia máxima entre dos iteraciones consecutivas, es lo que llamamos "el delta", y que este sea menor que una tolerancia escogida. Lo que nos indicará que hemos alcanzado la convergencia.</p>
 <ul>
 <li>Es sencillo pero convergencia lenta.</li>
 <li>Requiere dos matrices para mantener valores antiguos y nuevos.</li>
@@ -538,19 +587,37 @@
 <h3 id="2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado">2. Método de sobre-relajación de Jacobi (Jacobi modificado)</h3>
 <p>Se aplica un factor de sobre-relajación <span class="arithmatex">\(\omega\)</span> para acelerar la convergencia, mezclando el valor nuevo calculado con el anterior:</p>
 <div class="arithmatex">\[
-\phi^{new} = (1+\omega) \times \text{valor calculado} - \omega \times \phi^{old}
+\phi'(x, y) = (1+\omega)\left[\frac{\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)}4\right] - \omega \phi (x,y).
 \]</div>
 <ul>
 <li>Acelera la convergencia respecto al Jacobi estándar.</li>
 <li>Requiere ajuste del parámetro <span class="arithmatex">\(\omega\)</span> para optimizar rendimiento.</li>
 </ul>
+<p>Limitaciones: 
+No siempre el método de Sobre-relajación de jacobi funcionará ya que este método es muy inestable para grillas cuadradas, esto sucede debido a que 
+el método no actualiza los valores al instante como lo hace Gauss-Seidel, es por ello que al intentar la sobre-relajación los valores del error se 
+amplifican, esto debido a las condiciones de frontera internas, como lo son las barras con un voltaje de <span class="arithmatex">\(\pm 1\)</span>, como estan internamente esto 
+permite la generación de una región central en la cual los errores circulan libremente sin ser frenados por los bordes rígidos. Debido a que este 
+método se vuelv numéricamente inestable incluso para valores <span class="arithmatex">\(\omega &lt; 1\)</span>, esto nos demuestra que la estabilidad del método no solo va a depender 
+del factor de relajación <span class="arithmatex">\(\omega\)</span>, sino también de la geometría del problema y las condiciones de frontera.</p>
+<p>Una forma de poder utilizar el método de sobre-relajación de jacobi, para una placa cuadrada con barras internas con voltaje, es utilizar el método 
+de sobre-relajación sucesiva (SOR) lo que nos permite esto es hacer iteraciones paralelas sin necesidad de usar valores ya actualizados.</p>
+<div class="arithmatex">\[
+\phi'(x, y) = (1 - \omega) \cdot \phi(x, y) + \frac{\omega}{4} \cdot \left( \phi(x+1, y) + \phi(x-1, y) + \phi(x, y+1) + \phi(x, y-1) \right)
+\]</div>
 <hr />
 <h3 id="3-metodo-de-gauss-seidel">3. Método de Gauss-Seidel</h3>
-<p>En este método, la actualización del potencial en cada punto usa los valores más recientes disponibles (actualizados durante la misma iteración), mejorando la velocidad de convergencia frente a Jacobi.</p>
+<p>En este método, la actualización del potencial en cada punto usa los valores más recientes disponibles (actualizados durante la misma iteración), 
+mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la información propagarse más rápidamente a través de la grilla.</p>
+<div class="arithmatex">\[
+\phi(x, y) \leftarrow \frac{\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)}{4}.
+\]</div>
 <ul>
 <li>Solo se necesita una matriz.</li>
 <li>Mejor convergencia en menos iteraciones.</li>
+<li>Los valores recién calculados se utilizan en el mismo ciclo.</li>
 </ul>
+<p>aunque este método es más rápido que Jacobi, la forma(orden) de actualizar los puntos puede influir en la estabilidad y el patrón de error.</p>
 <hr />
 <h3 id="4-metodo-de-gauss-seidel-en-c">4. Método de Gauss-Seidel en C++</h3>
 <p>Implementación equivalente al método de Gauss-Seidel en Python, pero usando C++ con <code>std::vector</code> y <code>std::tuple</code>.</p>
@@ -572,9 +639,88 @@
 <h2 id="comparacion-y-resultados">Comparación y resultados</h2>
 <ul>
 <li>El método de Gauss-Seidel converge más rápido que Jacobi.</li>
-<li>La sobre-relajación mejora aún más la velocidad si se escoge un <span class="arithmatex">\(\omega\)</span> adecuado (por ejemplo, 0.9).</li>
+<li>La sobre-relajación mejora aún más la velocidad si se escoge un <span class="arithmatex">\(\omega\)</span> adecuado (por ejemplo, 0.9). Además de ello la forma geométrica y las condiciones de frontera son las adecuadas.</li>
 <li>La implementación en C++ es más eficiente y es base para paralelización futura.</li>
 </ul>
+<h2 id="grafica-de-escalabilidad">Gráfica de escalabilidad</h2>
+<p>En esta sección incluiremos una gráfica de escalabilidad tomando en cuenta 2 hilos(threads) y para 3 tamaños de M distintos(M = 500, 1000, 1500).
+<img alt="Gráfica de escalabilidad" src="../SpeedUp.png" /></p>
+<h2 id="analisis">Análisis</h2>
+<table>
+<thead>
+<tr>
+<th>M</th>
+<th>Hilos</th>
+<th>Speedup real</th>
+<th>Speedup ideal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>500</td>
+<td>1</td>
+<td>1.00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>500</td>
+<td>2</td>
+<td>1.68</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>1</td>
+<td>1.00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>2</td>
+<td>1.55</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1500</td>
+<td>1</td>
+<td>1.00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1500</td>
+<td>2</td>
+<td>1.54</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Speedup ideal es la aceleración máxima teórica, que aumenta linealmente con el número de hilos (por ejemplo, con 2 hilos, el speedup ideal es 2).</li>
+<li>Speedup real muestra los valores obtenidos al correr el código en la computadora.</li>
+</ul>
+<p>Observaciones
+1. Aceleración sublineal: <br>
+    En todos los casos, el speedup real con 2 hilos está por debajo del ideal (1.68, 1.55 y 1.54 en vez de 2). Esto es normal y esperado debido a:</p>
+<div class="highlight"><pre><span></span><code>  - Sobrecarga de gestión de hilos.
+  - Costos de sincronización y comunicación entre threads.
+  - Acceso a memoria compartida y posibles contenciones.
+</code></pre></div>
+<ol>
+<li>
+<p>Mejor escalabilidad con problema pequeño (M=500):<br>
+    El speedup para <span class="arithmatex">\(𝑀 = 500\)</span> con 2 hilos (1.68) es mayor que para <span class="arithmatex">\(𝑀 = 1000\)</span> y <span class="arithmatex">\(𝑀 = 1500\)</span> (alrededor de 1.55). Esto puede ser por:</p>
+<ul>
+<li>El trabajo extra por manejar datos mayores y la sobrecarga paralela que no escala igual.</li>
+<li>O bien, diferencias en la carga de trabajo por iteración (aunque usualmente problemas más grandes escalan mejor, puede depender de 
+    implementación).</li>
+</ul>
+</li>
+<li>
+<p>Escalabilidad limitada a 2 hilos:<br>
+      Solo se tiene datos para 1 y 2 hilos. Con solo dos puntos es difícil trazar conclusiones sólidas. Idealmente, pruebas con más hilos ayudarían 
+      a ver tendencias.</p>
+</li>
+</ol>
 
 
 

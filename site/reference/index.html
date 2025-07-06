@@ -536,7 +536,7 @@
 
 
 <h2 id="src.jaccobi.jacobi_relaxation" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">jacobi_relaxation</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">jacobi_relaxation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
 
 </h2>
 
@@ -561,20 +561,6 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
         </tr>
       </thead>
       <tbody>
-          <tr class="doc-section-item">
-            <td><code>L</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Tamaño físico de la placa cuadrada (dado en cm).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
           <tr class="doc-section-item">
             <td><code>M</code></td>
             <td>
@@ -764,8 +750,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resuelve el potencial eléctrico en una placa cuadrada usando el método de relajación de Jacobi.</span>
 
@@ -775,7 +760,6 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 <span class="sd">    máximo entre iteraciones sea menor que la `tolerance`.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
 <span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
 <span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
 <span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
@@ -1110,7 +1094,8 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
-<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_modified</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Aplicamos el método de Jacobi modificado con sobre-relajación para resolver</span>
 <span class="sd">    el potencial eléctrico en una placa cuadrada con condiciones de frontera internas.</span>
@@ -1148,11 +1133,11 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) deber ser mayor a 10&quot;</span><span class="p">)</span>
 
     <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
-    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
-    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
     <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
 
-    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
     <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
 
     <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
@@ -1178,6 +1163,7 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
                 <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># COMPLETE AQUÍ</span>
                     <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">omega</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+                    <span class="c1">#phiprime[i,j] = (1 - omega) * phi[i,j] + (omega / 4) * (phi[i + 1, j] + phi[i - 1, j] + phi[i, j + 1] + phi[i, j - 1])</span>
         <span class="c1"># Calculamos la diferencia máxima con respecto a los valores anteriores</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phi</span> <span class="o">-</span> <span class="n">phiprime</span><span class="p">))</span>
         <span class="c1"># Ahora intercambiamos los arreglos para la nueva iteración</span>
@@ -1225,7 +1211,7 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
 
 
 <h2 id="src.gauss_seidel.gauss_seidel" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">gauss_seidel</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">gauss_seidel</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1250,20 +1236,6 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
         </tr>
       </thead>
       <tbody>
-          <tr class="doc-section-item">
-            <td><code>L</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Tamaño físico de la placa cuadrada (dado en cm).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
           <tr class="doc-section-item">
             <td><code>M</code></td>
             <td>
@@ -1368,7 +1340,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_relaxation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_relaxation</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">itertions</span><span class="si">}</span><span class="s2"> iteraciones con error de </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="go">Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06</span>
 </code></pre></div>
@@ -1444,8 +1416,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">gauss_seidel</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">gauss_seidel</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resuelve el potencial eléctrico en una placa cuadrada usando el método de Gauss-seidel.</span>
 
@@ -1455,7 +1426,6 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 <span class="sd">    máximo entre iteraciones sea menor que la `tolerance`.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        L (int): Tamaño físico de la placa cuadrada (dado en cm).</span>
 <span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
 <span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
 <span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
@@ -1467,7 +1437,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 <span class="sd">        delta (float): Error máximo alcanzado en la última iteración.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_relaxation(100, 1.0, -1.0, 1e-5)</span>
 <span class="sd">        &gt;&gt;&gt; print(f&quot;Convergencia alcanzada en {itertions} iteraciones con error de {error:.2e}&quot;)</span>
 <span class="sd">        Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1478,7 +1448,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
     <span class="c1"># Validamos que M sea mayor que 10</span>
     <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grila (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
 
     <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
     <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
@@ -1528,7 +1498,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
     </div>
 
-</div><h1 id="metodo-de-gauss-seidel-implementado-en-c">Método de Gauss-seidel implementado en c++</h1>
+</div>
 
 
 
