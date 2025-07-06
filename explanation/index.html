@@ -357,45 +357,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
+  <a href="#5-metodo-de-gauss-seidel-en-c-con-openmp-memoria-compartida" class="md-nav__link">
     <span class="md-ellipsis">
-      Condiciones de frontera y configuración de la grilla
+      5. Método de Gauss-Seidel en C++ con OpenMP (memoria compartida)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#convergencia-y-criterio-de-parada" class="md-nav__link">
+  <a href="#6-metodo-de-gauss-seidel-en-c-con-mpi-memoria-distribuida" class="md-nav__link">
     <span class="md-ellipsis">
-      Convergencia y criterio de parada
+      6. Método de Gauss-Seidel en C++ con MPI (memoria distribuida).
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#comparacion-y-resultados" class="md-nav__link">
+  <a href="#7-condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
     <span class="md-ellipsis">
-      Comparación y resultados
+      7. Condiciones de frontera y configuración de la grilla
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#grafica-de-escalabilidad" class="md-nav__link">
+  <a href="#8-convergencia-y-criterio-de-parada" class="md-nav__link">
     <span class="md-ellipsis">
-      Gráfica de escalabilidad
+      8. Convergencia y criterio de parada
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#analisis" class="md-nav__link">
+  <a href="#9-comparacion-y-resultados" class="md-nav__link">
     <span class="md-ellipsis">
-      Análisis
+      9. Comparación y resultados
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-grafica-de-escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Gráfica de escalabilidad
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-analisis" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Análisis
     </span>
   </a>
   
@@ -496,45 +514,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
+  <a href="#5-metodo-de-gauss-seidel-en-c-con-openmp-memoria-compartida" class="md-nav__link">
     <span class="md-ellipsis">
-      Condiciones de frontera y configuración de la grilla
+      5. Método de Gauss-Seidel en C++ con OpenMP (memoria compartida)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#convergencia-y-criterio-de-parada" class="md-nav__link">
+  <a href="#6-metodo-de-gauss-seidel-en-c-con-mpi-memoria-distribuida" class="md-nav__link">
     <span class="md-ellipsis">
-      Convergencia y criterio de parada
+      6. Método de Gauss-Seidel en C++ con MPI (memoria distribuida).
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#comparacion-y-resultados" class="md-nav__link">
+  <a href="#7-condiciones-de-frontera-y-configuracion-de-la-grilla" class="md-nav__link">
     <span class="md-ellipsis">
-      Comparación y resultados
+      7. Condiciones de frontera y configuración de la grilla
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#grafica-de-escalabilidad" class="md-nav__link">
+  <a href="#8-convergencia-y-criterio-de-parada" class="md-nav__link">
     <span class="md-ellipsis">
-      Gráfica de escalabilidad
+      8. Convergencia y criterio de parada
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#analisis" class="md-nav__link">
+  <a href="#9-comparacion-y-resultados" class="md-nav__link">
     <span class="md-ellipsis">
-      Análisis
+      9. Comparación y resultados
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-grafica-de-escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Gráfica de escalabilidad
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-analisis" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Análisis
     </span>
   </a>
   
@@ -626,26 +662,42 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 <li>Mejora en eficiencia y manejo de memoria para casos grandes.</li>
 </ul>
 <hr />
-<h2 id="condiciones-de-frontera-y-configuracion-de-la-grilla">Condiciones de frontera y configuración de la grilla</h2>
+<h2 id="5-metodo-de-gauss-seidel-en-c-con-openmp-memoria-compartida">5. Método de Gauss-Seidel en C++ con OpenMP (memoria compartida)</h2>
+<p>Paralelizamos el método de Gauss-Seidel utilizando OpenMP y un método conocido como Red-black ordering, esta técnica nos permite ordenar los puntos
+de la grilla como si fuera un tablero de ajedrez (alternando "celdas rojas" y "negras"). Esto facilita que las actualizaciones no presenten conflictos de escritura en memoria compartida.</p>
+<ul>
+<li>paralelismo por hilos usando <code>#pragma omp parallel</code>. <br></li>
+<li>Ordenamiento rojo-negro: actualizamos primero las celas <span class="arithmatex">\((i + j)\)</span> par (rojas), luego las impares (negras).<br></li>
+</ul>
+<hr />
+<h2 id="6-metodo-de-gauss-seidel-en-c-con-mpi-memoria-distribuida">6. Método de Gauss-Seidel en C++ con MPI (memoria distribuida).</h2>
+<p>Este paralelismo distribuido utilizado con MPI (Message Passing Interface) a diferencia de OpenMP los datos estan divididos de manera que sus procesos son independientes y se comunican a través del intercambio de mensajes.</p>
+<ul>
+<li>Se divide la malla de forma horizontal y cada proceso calcula una porción. <br></li>
+<li>Se implemente el método red-black ordering dentro de cada proceso. <br></li>
+<li>Se realiza una reducción global del error con <code>MPI_ALLREDUCE</code>.</li>
+</ul>
+<hr />
+<h2 id="7-condiciones-de-frontera-y-configuracion-de-la-grilla">7. Condiciones de frontera y configuración de la grilla</h2>
 <ul>
 <li>La placa se discretiza en una malla de <span class="arithmatex">\((M+1) \times (M+1)\)</span> puntos.</li>
 <li>Dos barras verticales se colocan a 2 cm de cada borde lateral, con longitudes de 6 cm, y potenciales fijos <span class="arithmatex">\(V_p\)</span> y <span class="arithmatex">\(V_n\)</span>.</li>
 <li>El resto de bordes y posiciones iniciales son 0.</li>
 </ul>
 <hr />
-<h2 id="convergencia-y-criterio-de-parada">Convergencia y criterio de parada</h2>
+<h2 id="8-convergencia-y-criterio-de-parada">8. Convergencia y criterio de parada</h2>
 <p>La iteración se detiene cuando la diferencia máxima absoluta entre iteraciones consecutivas es menor que una tolerancia dada.</p>
 <hr />
-<h2 id="comparacion-y-resultados">Comparación y resultados</h2>
+<h2 id="9-comparacion-y-resultados">9. Comparación y resultados</h2>
 <ul>
 <li>El método de Gauss-Seidel converge más rápido que Jacobi.</li>
 <li>La sobre-relajación mejora aún más la velocidad si se escoge un <span class="arithmatex">\(\omega\)</span> adecuado (por ejemplo, 0.9). Además de ello la forma geométrica y las condiciones de frontera son las adecuadas.</li>
 <li>La implementación en C++ es más eficiente y es base para paralelización futura.</li>
 </ul>
-<h2 id="grafica-de-escalabilidad">Gráfica de escalabilidad</h2>
+<h2 id="10-grafica-de-escalabilidad">10. Gráfica de escalabilidad</h2>
 <p>En esta sección incluiremos una gráfica de escalabilidad tomando en cuenta 2 hilos(threads) y para 3 tamaños de M distintos(M = 500, 1000, 1500).
 <img alt="Gráfica de escalabilidad" src="../SpeedUp.png" /></p>
-<h2 id="analisis">Análisis</h2>
+<h2 id="11-analisis">11. Análisis</h2>
 <table>
 <thead>
 <tr>
