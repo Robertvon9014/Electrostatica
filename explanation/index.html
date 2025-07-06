@@ -566,9 +566,9 @@ vacío o en materiales dieléctricos).</p>
 <p>El dominio de este problema se encuentra  en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor:
 - Una barra se localiza cerca del borde izquierdo y se mantiene con potencial constante positivo <span class="arithmatex">\(V_p\)</span>.
 - Otra barra se encuentra cerca del borde derecho con potencial negativo <span class="arithmatex">\(V_n\)</span>.</p>
-<p>La longitud de ambas barras es de 6 cm, y estan separadas a la misma distancia que su longitud, lo cual nos permite visualizar una configuración simétrica con respecto al eje horizontal.</p>
+<p>La longitud de ambas barras es de 6 cm, y están separadas a la misma distancia que su longitud, lo cual nos permite visualizar una configuración simétrica con respecto al eje horizontal.</p>
 <p>Condiciones del problema:
-  - En la condiciones del problemas donde no se especifique el potencial se asume que la condición de frontera tiene un valor inicial de cero, o 
+  - En las condiciones del problemas donde no se especifique el potencial se asume que la condición de frontera tiene un valor inicial de cero, o 
     bien el potencial se actualiza iterativamente hasta converger.</p>
 <hr />
 <h2 id="metodos-implementados">Métodos implementados</h2>
@@ -594,13 +594,13 @@ vacío o en materiales dieléctricos).</p>
 <li>Requiere ajuste del parámetro <span class="arithmatex">\(\omega\)</span> para optimizar rendimiento.</li>
 </ul>
 <p>Limitaciones: 
-No siempre el método de Sobre-relajación de jacobi funcionará yaa que este método es muy inestable para grillas cuadradas, esto sucede debido a que 
+No siempre el método de Sobre-relajación de jacobi funcionará ya que este método es muy inestable para grillas cuadradas, esto sucede debido a que 
 el método no actualiza los valores al instante como lo hace Gauss-Seidel, es por ello que al intentar la sobre-relajación los valores del error se 
 amplifican, esto debido a las condiciones de frontera internas, como lo son las barras con un voltaje de <span class="arithmatex">\(\pm 1\)</span>, como estan internamente esto 
 permite la generación de una región central en la cual los errores circulan libremente sin ser frenados por los bordes rígidos. Debido a que este 
 método se vuelv numéricamente inestable incluso para valores <span class="arithmatex">\(\omega &lt; 1\)</span>, esto nos demuestra que la estabilidad del método no solo va a depender 
 del factor de relajación <span class="arithmatex">\(\omega\)</span>, sino también de la geometría del problema y las condiciones de frontera.</p>
-<p>Una forma de poder utilizar el método de sobre-relajación de jacobi, para una placa cuadrada con barras internar con voltaje, es utilizar el método 
+<p>Una forma de poder utilizar el método de sobre-relajación de jacobi, para una placa cuadrada con barras internas con voltaje, es utilizar el método 
 de sobre-relajación sucesiva (SOR) lo que nos permite esto es hacer iteraciones paralelas sin necesidad de usar valores ya actualizados.</p>
 <div class="arithmatex">\[
 \phi'(x, y) = (1 - \omega) \cdot \phi(x, y) + \frac{\omega}{4} \cdot \left( \phi(x+1, y) + \phi(x-1, y) + \phi(x, y+1) + \phi(x, y-1) \right)
@@ -615,7 +615,7 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 <ul>
 <li>Solo se necesita una matriz.</li>
 <li>Mejor convergencia en menos iteraciones.</li>
-<li>Los valores recien calculados se utilizan en el mismo ciclo.</li>
+<li>Los valores recién calculados se utilizan en el mismo ciclo.</li>
 </ul>
 <p>aunque este método es más rápido que Jacobi, la forma(orden) de actualizar los puntos puede influir en la estabilidad y el patrón de error.</p>
 <hr />
@@ -696,7 +696,7 @@ mejorando la velocidad de convergencia frente a Jacobi. Esto facilita a la infor
 </table>
 <ul>
 <li>Speedup ideal es la aceleración máxima teórica, que aumenta linealmente con el número de hilos (por ejemplo, con 2 hilos, el speedup ideal es 2).</li>
-<li>Speedup real muestra los valores obtenido al correr el código en la computadora.</li>
+<li>Speedup real muestra los valores obtenidos al correr el código en la computadora.</li>
 </ul>
 <p>Observaciones
 1. Aceleración sublineal: <br>

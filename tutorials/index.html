@@ -310,19 +310,19 @@
 
 
 <h1 id="tutorial">Tutorial</h1>
-<p>En esta parte nos centraremos en un efonque orientado al aprendizaje. Aprenderemos como instalar las bibliotecas a utilizar y como implementar el 
-método de relajacion de Jacobi. Los métodos de sobre-relajación de Jacobi y Gauss-Seidel siguen la misma métodología de implementación exceptuando 
-los códigos de C++ que sus bibliotecas a utilizar y compilación es distinta.</p>
+<p>En esta parte nos centraremos en un enfonque orientado al aprendizaje. Aprenderemos como instalar las bibliotecas a utilizar y como implementar el 
+método de relajación de Jacobi. Los métodos de sobre-relajación de Jacobi y Gauss-Seidel siguen un formato metodologíco similar, mientras que los 
+implementados en C++ utilizan bibliotecas y procesos de compilación distintos.</p>
 <h1 id="requisitos-previos">Requisitos previos</h1>
 <p>Antes de comenzar necesitamos tener instalado la siguiente biblioteca en nuestro entorno de python:
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>instal<span class="w"> </span>numpy
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>numpy
 pip<span class="w"> </span>install<span class="w"> </span>matplotlib
 </code></pre></div></p>
 <h2 id="paso-1-configuramos-el-entorno">Paso 1: Configuramos el entorno</h2>
-<p>Abrimos el editor de código <code>vim</code> y creamor el nuevo archivo de python.
+<p>Abrimos el editor de texto <code>vim</code> y creamos el nuevo archivo de python.
 Por ejemplo, lo llamamos jacobi.py</p>
 <h2 id="paso-2-importamos-bibliotecas">Paso 2: Importamos bibliotecas</h2>
-<p>Comenzamos importando las bibliotecas requeridas para el código de Jacobi, Sobre-relajación de Jacobi,
+<p>Comenzamos importando las bibliotecas requeridas para el código de Jacobi, sobre-relajación de Jacobi,
 Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compartida y distribuida.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>               <span class="c1"># Biblioteca para operaciones numéricas eficientes, especialmente con arreglos y matrices</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># Módulo principal para graficar en 2D con una interfaz similar a MATLAB</span>
@@ -345,25 +345,56 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
 </code></pre></div></p>
 <h2 id="paso-3-definimos-las-funciones-que-retornaran-los-metodos-de-jacobi-sobre-relajacion-de-jacobi-gauss-seidel-y-gauss-seidel-en-memoria-compartida-y-distribuida">Paso 3: Definimos las funciones que retornarán los métodos de Jacobi, Sobre-relajación de Jacobi, Gauss-Seidel, y Gauss-Seidel en memoria compartida y distribuida.</h2>
 <p>Método de relajación de Jacobi
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resuelve el potencial eléctrico en una placa cuadrada usando el método de relajación de Jacobi.</span>
+
+<span class="sd">    Se modela la región cuadrada de tamaño `L x L`dividida en `M x M` puntos.</span>
+<span class="sd">    Se tienen dos barras verticales que se colocan como condiciones de frontera internas:</span>
+<span class="sd">    Una posee un potencial `V_p` y otra con `V_n`. La función itera hasta que el cambio</span>
+<span class="sd">    máximo entre iteraciones sea menor que la `tolerance`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).</span>
+<span class="sd">        V_p (float): Voltaje aplicado en la barra positiva.</span>
+<span class="sd">        V_n (float): Voltaje aplicado en la barra negativa.</span>
+<span class="sd">        tolerance (float): Tolerancia para el criterio de convergencia.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        phi (ndarray): Matriz de 2 dimensiones con potenciales verticales dados por dos barras.</span>
+<span class="sd">        its (int): Número de iteraciones realizadas.</span>
+<span class="sd">        delta (float): Error máximo alcanzado en la última iteración.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Iteraciones: {its}, Error final: {error:.2e}&quot;)</span>
+<span class="sd">        Iteraciones: 1794, Error final: 9.99e-06</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Primero creamos los arreglos 2-dimensionales de la grilla</span>
     <span class="c1"># Vamos a necesitar dos según la regla de Jacobi</span>
     <span class="c1"># Note que usamos M+1, debido a que debemos contener la condición de frontera</span>
     <span class="c1"># phi contiene inicialmente los valores iniciales. Vamos a utilizar ceros.</span>
     <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
+    <span class="c1"># Recuerde accesos de listas en np.ndarray</span>
 
-    <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
-    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
-    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
-    <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
+    <span class="c1"># Validamos que M sea mayor a 10</span>
+    <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
 
-    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
-    <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
+    <span class="c1"># --- Calculamos la reposición dependiendo el tamaño de M</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">bar_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.6</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">bar_len</span>
+
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span>  <span class="c1"># Voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">bar_len</span> <span class="c1"># Voltaje Negativo a 2 cm del borde derecho</span>
 
     <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
     <span class="c1"># Recuerde accesos de listas en np.ndarray</span>
-    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_plus</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_p</span>
-    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_n</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_plus</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_p</span>  <span class="c1"># Barra positiva</span>
+    <span class="n">phi</span><span class="p">[</span><span class="n">fil_start</span><span class="p">:</span><span class="n">fil_end</span><span class="p">,</span> <span class="n">col_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">V_n</span>    <span class="c1"># Barra negativa</span>
+
     <span class="c1"># phiprime se necesita para la iteración</span>
     <span class="n">phiprime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="c1"># Iteración de Jacobi</span>
@@ -374,9 +405,9 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
         <span class="n">its</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_plus</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_neg</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span><span class="p">:</span>
-                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
                 <span class="c1"># Condición de frontera</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_plus</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">col_neg</span> <span class="ow">and</span> <span class="n">fil_start</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">fil_end</span><span class="p">:</span>
+                    <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">M</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">M</span><span class="p">:</span>
                     <span class="n">phiprime</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
                 <span class="c1"># Iteración principal</span>
@@ -391,6 +422,7 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
         <span class="n">phi</span> <span class="o">=</span> <span class="n">phiprime</span>
         <span class="c1"># El nuevo phiprime es el phi viejo</span>
         <span class="n">phiprime</span> <span class="o">=</span> <span class="n">temp</span>
+
     <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
 </code></pre></div></p>
 <p>Método de Sobre-relajación de jacobi
@@ -474,7 +506,7 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
     <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
 </code></pre></div></p>
 <p>Método de Gauss-Seidel</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">gauss_seidel</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">gauss_seidel</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resuelve el potencial eléctrico en una placa cuadrada usando el método de Gauss-seidel.</span>
 
@@ -497,7 +529,7 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; phi, its, error = jacobi_relaxation(10, 100, 1.0, -1.0, 1e-5)</span>
-<span class="sd">        &gt;&gt;&gt; print(f&quot;Convergencia alcanzada en {itertions} iteraciones con error de {error:.2e}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Convergencia alcanzada en {its} iteraciones con error de {error:.2e}&quot;)</span>
 <span class="sd">        Convergencia alcanzada en 1125 iteraciones con error de 9.97e-06</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Primero creamos el arreglo 2-dimensionales de la grilla</span>
@@ -507,7 +539,7 @@ Gauss-seidel y Gauss-Seidel implementado en C++ y paralelizado con memoria compa
 
     <span class="c1"># Validamos que M sea mayor que 10</span>
     <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grila (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) debe ser mayor a 10&quot;</span><span class="p">)</span>
 
     <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
     <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
@@ -840,7 +872,7 @@ Método de Gauss-Seidel Memoria Distribuida
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">iterations</span><span class="si">}</span><span class="s2"> iteraciones con error de </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="c1"># print(&quot;Valores grilla phi[50][25] &quot;, gaussSeidel_vals[50][25])</span>
 </code></pre></div></li>
-<li>LLamado a la función del método de Gauss-Seidel memoria compartida
+<li>Llamado a la función del método de Gauss-Seidel memoria compartida
   <div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span>
 <span class="kt">int</span><span class="w"> </span><span class="n">iteraciones</span><span class="p">;</span>
 <span class="kt">double</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
@@ -896,7 +928,7 @@ chmod<span class="w"> </span>+x<span class="w"> </span>gauss_seidel.py
 ./jacobi_modified.py
 ./gauss_seidel.py
 </code></pre></div>
-- para ejecutar los código .cpp se hacen de la siguiente mánera:
+- para ejecutar los código .cpp se hacen de la siguiente manera:
   - para gaussseidel.cpp
     <div class="highlight"><pre><span></span><code>g++<span class="w"> </span>gaussseidel.cpp<span class="w"> </span>-o<span class="w"> </span>gaussseidel
 g++<span class="w"> </span>-fopenmp<span class="w"> </span>gaussseidelmc.cpp<span class="w"> </span>-o<span class="w"> </span>gaussseidelmc
