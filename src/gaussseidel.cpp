@@ -3,7 +3,22 @@
 #include <vector>
 #include <tuple>
 
-std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double tolerance){
+/**
+ * @brief Resuelve el potencial eléctrico en una región cuadrada usando el método de Gauss-Seidel.
+ *
+ * Se modela la región cuadrada de tamaño `L x L` dividida en `M x M` puntos.
+ * Se imponen dos barras verticales: una con voltaje positivo `V_p` y otra con voltaje negativo `V_n`.
+ *
+ * @param L Longitud del lado de la placa (en cm), parametro no utilizado
+ * puesto que se trabajo en índices de grilla.
+ * @param M Número de divisiones en la malla (resolución)
+ * @param V_p Voltaje positivo aplicado a la primera barra vertical
+ * @param V_n Voltaje negativo aplicado a la segunda barra vertical
+ * @param tolerance Tolerancia para el criterio de convergencia
+ * @return std::tuple<int, double> Número de iteraciones realizadas y error final
+ */
+
+std::tuple<int, double> gaussseidel(int M, double V_p, double V_n, double tolerance){
   // creamos un arreglo de 2-dimensiones usando std::vector
   using Matrix = std::vector<std::vector<double>>;
   Matrix phi(M + 1, std::vector<double>(M + 1, 0.0));
@@ -69,10 +84,15 @@ std::tuple<int, double> gaussseidel(int L, int M, double V_p, double V_n, double
   return std::make_tuple(its, delta);
 }
 
+/**
+ * @brief Función principal que ejecuta la simulación de Gauss-Seidel.
+ *
+ * Llama a la función gaussseidel con valores predefinidos y muestra los resultados.
+ */
 int main(){
   int iteraciones;
   double error;
-  std::tie(iteraciones, error) = gaussseidel(10, 100, 1.0, -1.0, 1e-5);
+  std::tie(iteraciones, error) = gaussseidel(100, 1.0, -1.0, 1e-5);
 
   std::cout << " Convergencia alcanzada en " << iteraciones << " iteraciones con error " << error << std::endl;
   return 0;

@@ -5,7 +5,7 @@ import numpy as np
 # Esta función toma como argumentos el tamaño lineal de la grilla cuadrada,
 # V_p: Voltaje positivo
 # V_n: Voltaje negativo
-def jacobi_relaxation(L, M, V_p, V_n, tolerance):
+def jacobi_relaxation(M, V_p, V_n, tolerance):
     """
     Resuelve el potencial eléctrico en una placa cuadrada usando el método de relajación de Jacobi.
 
@@ -15,7 +15,6 @@ def jacobi_relaxation(L, M, V_p, V_n, tolerance):
     máximo entre iteraciones sea menor que la `tolerance`.
 
     Args:
-        L (int): Tamaño físico de la placa cuadrada (dado en cm).
         M (int): Número de divisiones de la grilla (grilla de (M+1) x (M+1)).
         V_p (float): Voltaje aplicado en la barra positiva.
         V_n (float): Voltaje aplicado en la barra negativa.

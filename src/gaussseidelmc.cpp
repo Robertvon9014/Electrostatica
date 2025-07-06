@@ -6,6 +6,14 @@
 #include <omp.h>
 #include <iomanip>
 
+/**
+ * @brief Devuelve el tiempo actual en segundos desde Epoch.
+ *
+ * Esta función se usa para calcular el tiempo de ejecución de secciones del código.
+ *
+ * @return double Tiempo en segundos como número decimal de alta precisión.
+ */
+
 double seconds(){
   struct timeval tmp;
   double sec;
@@ -14,6 +22,21 @@ double seconds(){
 
   return sec;
 }
+
+/**
+ * @brief Resuelve el potencial eléctrico en una placa cuadrada con método Gauss-Seidel usando red-black ordering y OpenMP.
+ *
+ * Se impone una grilla de tamaño `M x M` sobre la placa, con dos barras verticales:
+ * una con voltaje positivo `V_p` y otra con voltaje negativo `V_n`. 
+ * El algoritmo aplica el método de Gauss-Seidel con ordenamiento red-black en paralelo.
+ *
+ * @param M Número de divisiones de la grilla (debe ser mayor a 10)
+ * @param V_p Voltaje positivo aplicado
+ * @param V_n Voltaje negativo aplicado
+ * @param tolerance Tolerancia para el criterio de convergencia
+ * @param num_procs Referencia donde se guardará el número de procesos/hilos usados
+ * @return std::tuple<int, double> Número de iteraciones realizadas y error final
+ */
 
 std::tuple<int, double> gaussseidel(int M, double V_p, double V_n, double tolerance, int &num_procs){
   // Creamos un arreglo de 2-dimensiones usando std::vector
@@ -123,6 +146,14 @@ std::tuple<int, double> gaussseidel(int M, double V_p, double V_n, double tolera
   return std::make_tuple(its, delta);
 }
 
+/**
+ * @brief Función principal que ejecuta la simulación de Gauss-Seidel con OpenMP.
+ *
+ * Mide el tiempo de ejecución, llama a `gaussseidel` con M=500 y muestra el resultado.
+ *
+ * @return int Código de salida del programa (0 si termina correctamente)
+ */
+
 int main(){
   int iteraciones;
   double error;
@@ -133,7 +164,7 @@ int main(){
   // iniciamos el temporizador
   double time_1 = seconds();
 
-  std::tie(iteraciones, error) = gaussseidel(100, 1.0, -1.0, 1e-5, num_procs);
+  std::tie(iteraciones, error) = gaussseidel(500, 1.0, -1.0, 1e-5, num_procs);
   std::cout << "Convergencia alcanzada en " << iteraciones << " iteraciones con error " << error << std::endl;
 
 

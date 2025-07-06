@@ -73,6 +73,7 @@ def jacobi_modified(L, M, V_p, V_n, omega, tolerance):
                 else:
                 # COMPLETE AQUÍ
                     phiprime[i,j] = (1 + omega) * (0.25 * (phi[i + 1, j] + phi[i - 1, j] + phi[i, j + 1] + phi[i, j - 1])) - (omega * phi[i,j])
+                    #phiprime[i,j] = (1 - omega) * phi[i,j] + (omega / 4) * (phi[i + 1, j] + phi[i - 1, j] + phi[i, j + 1] + phi[i, j - 1])
         # Calculamos la diferencia máxima con respecto a los valores anteriores
         delta = np.max(np.abs(phi - phiprime))
         # Ahora intercambiamos los arreglos para la nueva iteración

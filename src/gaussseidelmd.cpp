@@ -5,12 +5,36 @@
 #include <tuple>
 #include <sys/time.h>
 
+/**
+ * @brief Devuelve el tiempo actual en segundos desde Epoch.
+ *
+ * Esta función se usa para calcular el tiempo de ejecución de secciones del código.
+ *
+ * @return double Tiempo en segundos como número decimal de alta precisión.
+ */
+
 // Temporizador preciso
 double seconds(){
   struct timeval tmp;
   gettimeofday(&tmp, nullptr);
   return tmp.tv_sec + tmp.tv_usec * 1e-6;
 }
+
+// Función principal paralela usando memoria distribuida
+/**
+ * @brief Resuelve el potencial eléctrico en una placa usando el método de Gauss-Seidel con ordenamiento red-black y MPI.
+ *
+ * Se divide la grilla de tamaño `M x M` entre los procesos disponibles.
+ * Cada proceso calcula una porción del dominio y colabora usando comunicación punto a punto.
+ * Se usan halos (bordes fantasma) para compartir información entre procesos vecinos.
+ * 
+ * @param L Longitud de la placa (no se usa en el cálculo actual)
+ * @param M Número de divisiones en la grilla (resolución espacial)
+ * @param V_p Voltaje positivo aplicado a una barra vertical
+ * @param V_n Voltaje negativo aplicado a otra barra vertical
+ * @param tolerance Tolerancia para el criterio de convergencia (máximo delta permitido)
+ * @return std::tuple<int, double> Par con número de iteraciones realizadas y el error final (delta)
+ */
 
 // Función principal paralela usando memoria distribuida
 std::tuple<int, double> gaussseidel_mpi(int L, int M, double V_p, double V_n, double tolerance){
@@ -130,6 +154,16 @@ std::tuple<int, double> gaussseidel_mpi(int L, int M, double V_p, double V_n, do
   return std::make_tuple(its, delta);
 }
 
+/**
+ * @brief Función principal del programa MPI.
+ *
+ * Inicializa el entorno MPI, ejecuta la función `gaussseidel_mpi` y mide el tiempo de ejecución.
+ * Solo el proceso raíz imprime los resultados de iteraciones, error y tiempo.
+ *
+ * @param argc Número de argumentos
+ * @param argv Argumentos del programa
+ * @return int Código de salida
+ */
 int main(int argc, char**argv){
   MPI_Init(&argc,&argv);
   int rank; MPI_Comm_rank(MPI_COMM_WORLD,&rank);
