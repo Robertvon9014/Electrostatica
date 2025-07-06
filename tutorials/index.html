@@ -317,15 +317,15 @@
 pip<span class="w"> </span>install<span class="w"> </span>matplotlib
 </code></pre></div></p>
 <h2 id="paso-1-configuramos-el-entorno">Paso 1: Configuramos el entorno</h2>
-<p>Primero abrimos el editor de código <code>vim</code> y creamor el nuevo archivo de python.
-Por ejemplo, se llamará jacobi.py</p>
+<p>Abrimos el editor de código <code>vim</code> y creamor el nuevo archivo de python.
+Por ejemplo, lo llamamos jacobi.py</p>
 <h2 id="paso-2-importamos-bibliotecas">Paso 2: Importamos bibliotecas</h2>
 <p>Comenzamos importando las bibliotecas requeridas para el código</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
 </code></pre></div>
-<h2 id="paso-3-definimos-la-funicon-que-retornara-el-metodo-de-jacobi">Paso 3: Definimos la funicón que retornara el método de Jacobi</h2>
+<h2 id="paso-3-definimos-la-funcion-que-retornara-el-metodo-de-jacobi">Paso 3: Definimos la función que retornara el método de Jacobi</h2>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">jacobi_relaxation</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">V_p</span><span class="p">,</span> <span class="n">V_n</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
     <span class="c1"># Primero creamos los arreglos 2-dimensionales de la grilla</span>
     <span class="c1"># Vamos a necesitar dos según la regla de Jacobi</span>
@@ -375,7 +375,7 @@ Por ejemplo, se llamará jacobi.py</p>
     <span class="k">return</span> <span class="n">phi</span><span class="p">,</span> <span class="n">its</span><span class="p">,</span> <span class="n">delta</span>
 </code></pre></div>
 <h2 id="paso-4-llamado-a-la-funcion">Paso 4: Llamado a la función</h2>
-<p>En esta parte escribimos el llamado a la función para almacenas los resultados en nuevas variables y poder realizar la impresion en pantalla</p>
+<p>En esta parte escribimos el llamado a la función para almacenar los resultados en nuevas variables y poder realizar la impresión en pantalla</p>
 <div class="highlight"><pre><span></span><code><span class="n">jacobi_vals</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">jacobi_relaxation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Convergencia alcanzada en </span><span class="si">{</span><span class="n">iterations</span><span class="si">}</span><span class="s2"> iteraciones con error </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>

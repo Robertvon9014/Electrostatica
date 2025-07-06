@@ -525,11 +525,21 @@
 <div class="arithmatex">\[
 \frac{\partial^2 \phi}{\partial x^2} + \frac{\partial^2 \phi}{\partial y^2} = 0
 \]</div>
-<p>en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor con potenciales <span class="arithmatex">\(V_p\)</span> y <span class="arithmatex">\(V_n\)</span>.</p>
+<p>Esta ecuación nos permite describir el comportamiento de un potencial eléctrico sobre una región donde no existen cargas libres (es decir, en el 
+vacío o en materiales dieléctricos).</p>
+<p>El dominio de este problema se encuentra  en una placa cuadrada de 10 cm × 10 cm, con dos barras internas que simulan las placas de un capacitor:
+- Una barra se localiza cerca del borde izquierdo y se mantiene con potencial constante positivo <span class="arithmatex">\(V_p\)</span>.
+- Otra barra se encuentra cerca del borde derecho con potencial negativo $ V_n$.</p>
+<p>La longitud de ambas barras es de 6 cm, y estan separadas a la misma distancia que su longitud, lo cual nos permite visualizar una configuración simétrica con respecto al eje horizontal.</p>
+<p>Condiciones del problema:
+  - En la condiciones del problemas donde no se especifique el potencial se asume que la condición de frontera tiene un valor inicial de cero, o 
+    bien el potencial se actualiza iterativamente hasta converger.</p>
 <hr />
 <h2 id="metodos-implementados">Métodos implementados</h2>
 <h3 id="1-metodo-de-relajacion-de-jacobi">1. Método de relajación de Jacobi</h3>
 <p>Este método itera actualizando el potencial en cada punto de la malla usando el promedio de sus vecinos en la iteración anterior, manteniendo fijas las condiciones de frontera.</p>
+<p>La idea principal de este método es que se actualiza el valor del potencial eléctrico <span class="arithmatex">\(\phi(x,y)\)</span> en cada punto de la grilla como el promedio de los valores de sus vecinos adyacentes(arriba, abajo, izquierda, derecha) que se agarran de los datos iterativos anteriores, mientras mantenemos fijas las condiciones de frontera.</p>
+<p>Esto se repite hasta que hayamos alcanzado una diferencia máxima entre dos iteraciones consecutivas, es lo que llamamos "el delta", y que este sea menor que una tolerancia escogida. Lo que nos indicará que hemos alcanzado la convergencia.</p>
 <ul>
 <li>Es sencillo pero convergencia lenta.</li>
 <li>Requiere dos matrices para mantener valores antiguos y nuevos.</li>
@@ -538,7 +548,7 @@
 <h3 id="2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado">2. Método de sobre-relajación de Jacobi (Jacobi modificado)</h3>
 <p>Se aplica un factor de sobre-relajación <span class="arithmatex">\(\omega\)</span> para acelerar la convergencia, mezclando el valor nuevo calculado con el anterior:</p>
 <div class="arithmatex">\[
-\phi^{new} = (1+\omega) \times \text{valor calculado} - \omega \times \phi^{old}
+\phi'(x, y) = \frac{1}{4}\left[\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)\right],
 \]</div>
 <ul>
 <li>Acelera la convergencia respecto al Jacobi estándar.</li>

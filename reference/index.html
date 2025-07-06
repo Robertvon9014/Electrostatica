@@ -1148,11 +1148,11 @@ en el resto de la grilla usando un factor de sobre-relajación <code>omega</code
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El tamaño de la grilla (M) deber ser mayor a 10&quot;</span><span class="p">)</span>
 
     <span class="c1"># --- Calculamos la reposición dependiendo del valor de M</span>
-    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
-    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
+    <span class="n">fil_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="c1"># 2 cm desde arriba</span>
+    <span class="n">vol_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>   <span class="c1"># 6 cm longitud de la barra</span>
     <span class="n">fil_end</span> <span class="o">=</span> <span class="n">fil_start</span> <span class="o">+</span> <span class="n">vol_len</span>
 
-    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
+    <span class="n">col_plus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">M</span><span class="p">)</span>  <span class="c1"># voltaje positivo a 2 cm del borde izquierdo</span>
     <span class="n">col_neg</span> <span class="o">=</span> <span class="n">col_plus</span> <span class="o">+</span> <span class="n">vol_len</span> <span class="c1"># Voltaje negativo a 2 cm del borde derecho</span>
 
     <span class="c1"># Ahora tenemos que colocar la condición inicial.</span>
@@ -1528,7 +1528,7 @@ máximo entre iteraciones sea menor que la <code>tolerance</code>.</p>
 
     </div>
 
-</div><h1 id="metodo-de-gauss-seidel-implementado-en-c">Método de Gauss-seidel implementado en c++</h1>
+</div>
 
 
 
