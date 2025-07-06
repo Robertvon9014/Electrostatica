@@ -3,7 +3,7 @@
 En este proyeto se implementa y compara distintos métodos numéricos para resolver la ecuación diferencial de Laplace en dos dimensiones, modelando 
 un capacitor ideal en una placa cuadrada 10 cm x 10 cm
 
-Incluimos las siguientes implementaciones:
+Incluimos las siguientes implementaciones:<br>
 - Método de relajación de Jacobi (Python)
 - Método de sobre-relajación de Jacobi (Python)
 - Método de Gauss-Seidel (Python)
