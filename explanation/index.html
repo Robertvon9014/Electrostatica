@@ -548,7 +548,7 @@ vacío o en materiales dieléctricos).</p>
 <h3 id="2-metodo-de-sobre-relajacion-de-jacobi-jacobi-modificado">2. Método de sobre-relajación de Jacobi (Jacobi modificado)</h3>
 <p>Se aplica un factor de sobre-relajación <span class="arithmatex">\(\omega\)</span> para acelerar la convergencia, mezclando el valor nuevo calculado con el anterior:</p>
 <div class="arithmatex">\[
-\phi'(x, y) = \frac{1}{4}\left[\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)\right],
+\phi'(x, y) = (1+\omega)\left[\frac{\phi(x+a, y) + \phi(x-a, y) + \phi(x, y+a) + \phi(x, y-a)}4\right] - \omega \phi (x,y).
 \]</div>
 <ul>
 <li>Acelera la convergencia respecto al Jacobi estándar.</li>
